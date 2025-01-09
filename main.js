@@ -1,74 +1,95 @@
-const plane = document.querySelector(".grid");
-// Number of rows and columns
-const rows = 9;
-const cols = 9;
+const gameProgress = {
+  region: 1, // Current airplane region
+  totalRegions: 3, // Total regions
+  secretsDiscovered: new Set(), // Set to track unique interactions
+  totalSecrets: 17, // Total secrets
+};
 
-// Generate the grid dynamically
-for (let i = 0; i < rows; i++) {
-  for (let j = 0; j < cols; j++) {
-    const div = document.createElement("div");
-    if (i === 0 || i === 1) {
-      div.classList.add("wall");
-      if (i === 1 && j === 1) {
-        div.classList.add("upper_door"); 
-        div.classList.add("cockpit-text"); 
-        div.textContent = "Cockpit";
-      } else if (i === 1) {
-        div.classList.add("wall-bottom"); // Add a specific class for i === 1
+function generateMap(mapArray) {
+  const plane = document.querySelector(".grid");
+
+  // Clear the existing grid
+  plane.innerHTML = "";
+
+  // Iterate over the map array
+  for (let i = 0; i < mapArray.length; i++) {
+    for (let j = 0; j < mapArray[i].length; j++) {
+      const div = document.createElement("div");
+
+      // Determine the tile type based on the map value
+      switch (true) { // Use true to enable conditional checks in cases
+        case mapArray[i][j] === 1:
+          div.classList.add("wall");
+          break;
+        case mapArray[i][j] === 2:
+          div.classList.add("stewardess1");
+          break;
+        case mapArray[i][j] === 3:
+          div.classList.add("stewardess2");
+          break;
+        case mapArray[i][j] === 8:
+          div.classList.add("airplane_logo");
+          break;
+        case mapArray[i][j] === 9:
+          div.classList.add("upper_door", "cockpit-text");
+          div.textContent = "Cockpit";
+          break;
+        case mapArray[i][j] > 200 && mapArray[i][j] < 300: // Range condition
+          div.classList.add("seat");
+          break;
+        case mapArray[i][j] === -1:
+          div.classList.add("floor");
+          break;
+        case mapArray[i][j] < -100 && mapArray[i][j] > -200: // Range condition
+        div.classList.add("aisle");
+        const letter = calculateAisle(-mapArray[i][j]);
+        if (letter) {
+          div.textContent = letter;
+        }
+        break;
+        case mapArray[i][j] === -21:
+          div.classList.add("player");
+          break;
+          case mapArray[i][j] < 20 && mapArray[i][j] >= 10:
+          div.classList.add("lower_door");
+          break;
+        default:
+          div.classList.add("unknown"); // Handle unexpected values
       }
-    }
-    if (i === 2 && j === 0) {
-      div.classList.add("player"); 
-    }
-    if (i === 0 && j === 6) {
-      div.classList.add("airplane_logo"); 
-    }
 
-    if (i === 8 && j === 6) {
-      div.classList.add("lower_door"); 
+      // Append the div to the grid
+      plane.appendChild(div);
     }
-
-    if (i !== 0 && i !== 1 && i !== 2 && i !== 3 && i !== 8 && j !== 2 && j !== 6) {
-      div.classList.add("seat"); 
-    }
-
-    if (i !== 0 && i !== 1 && i !== 2 && i !== 3 &&i !== 8 && (j === 2 || j === 6)) {
-      div.classList.add("aisle");
-      if (i === 4) div.textContent = "A";
-      if (i === 5) div.textContent = "B";
-      if (i === 6) div.textContent = "C";
-      if (i === 7) div.textContent = "D";
-    }
-
-    if (i === 2 && j === 5) {
-      div.classList.add("stewardess1"); 
-    }
-
-    if (i === 2 && j === 8) {
-      div.classList.add("stewardess2"); 
-    }
-
-    plane.appendChild(div);
   }
+
+  // Update the player reference in gameState
+  gameState.player = document.querySelector(".player");
 }
+
+
 
 const gameState = {
   map: [
-    [0, 0, 0, 0, 0, 2, 0, 0, 3],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [4, 4, 0, 4, 4, 4, 0, 4, 4],
-    [5, 5, 0, 5, 5, 5, 0, 5, 5],
-    [6, 6, 0, 6, 6, 6, 0, 6, 6],
-    [7, 7, 0, 7, 7, 7, 0, 7, 7],
+    [1, 1, 1, 1, 1, 1, 8, 1, 1],
+    [1, 9, 1, 1, 1, 1, 1, 1, 1],
+    [-21, -1, -1, -1, -1, 2, -1, -1, 3],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [201, 201, -101, 201, 201, 201, -101, 201, 201],
+    [202, 202, -102, 202, 202, 202, -102, 202, 202],
+    [203, 203, -103, 203, 203, 203, -103, 203, 203],
+    [204, 204, -104, 204, 204, 204, -104, 204, 204],
+    [0, 0, 0, 0, 0, 0, 11, 0, 0],
   ],
   gridSize: 64, // Size of each grid cell
-  position: { x: 0, y: 0 }, // Starting position (player starts at grid[2][0])
+  position: { x: 0, y: 128 }, // Starting position
   player: document.querySelector(".player"),
   isMoving: false, // Track if animation is in progress
   currentDirection: "down", // Default direction
   moveDuration: 0.3, // Movement duration in seconds
   idleTimeout: null, // Timer for inactivity
 };
+
+generateMap(gameState.map);
 
 // Check if the player can move to the new position
 function canMoveTo(newX, newY) {
@@ -81,7 +102,7 @@ function canMoveTo(newX, newY) {
     gridY >= 0 &&
     gridY < gameState.map.length &&
     gridX < gameState.map[0].length &&
-    gameState.map[gridY][gridX] === 0
+    gameState.map[gridY][gridX] < 0
   );
 }
 
@@ -156,7 +177,8 @@ function movePlayer() {
 
   // Move the player smoothly to the new position
   gameState.player.style.transition = `transform ${gameState.moveDuration}s linear`;
-  gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-60%) scale(1.5)`;
+  gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+
 
   // Stop animation and return to idle after movement
   setTimeout(() => {
@@ -255,15 +277,208 @@ function handleInteraction() {
           });
         }
       });
-    } else if (targetTile === 4) {
+    } else if (targetTile === 201) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
       showPopup('Aisle A - About Me', 'Hi my name is Carlson and am a second year studying computer science at UNSW.', './assets/content/aisleA.jpg');
-    } else if (targetTile === 5) {
+    } else if (targetTile === 202) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
       showPopup('Aisle B - Beliefs', 'I strongly believe that everyone\'s purpose is to help each other grow', './assets/content/aisleB.avif');
-    } else if (targetTile === 6) {
+    } else if (targetTile === 203) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
       showPopup('Aisle C - Characteristics', 'Considerate, Dilligent, Easygoing, Funny, Honest', './assets/content/aisleC.png');
     }
-    else if (targetTile === 7) {
+    else if (targetTile === 204) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
       showPopup('Aisle D - Dreams', 'I want to create a language learning app (better than duolingo) that will actually help people learn languages and become fluent in them.', './assets/content/aisleD.jpg');
+    } else if (targetTile === 11) {
+      gameProgress.region = 2; // Example: Change to region 2
+      updateGameInfo();
+      const overlay = document.getElementById("transition-overlay");
+      const textElement = document.getElementById("transition-text");
+    
+      // Set the transition message
+      textElement.textContent = "Travelling to a new part of the plane...";
+      
+      // Start fade-in animation
+      overlay.classList.add("fade-in");
+    
+      // Wait for fade-in animation to complete
+      setTimeout(() => {
+        // Define the new game state
+        const gameState2 = {
+          map: [
+            [1, 1, 8, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 10, 1, 1],
+            [-21, -1, -1, -1, -1, 2, -1, -1, 3],
+            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+            [201, 201, -105, 201, 201, 201, -105, 201, 201],
+            [202, 202, -106, 202, 202, 202, -106, 202, 202],
+            [203, 203, -107, 203, 203, 203, -107, 203, 203],
+            [204, 204, -108, 204, 204, 204, -108, 204, 204],
+            [0, 0, 0, 0, 0, 0, 12, 0, 0],
+          ],
+          gridSize: 64, // Size of each grid cell
+          position: { x: 64, y: 128 }, // Starting position
+          player: null, // Will be updated after generating the map
+          isMoving: false, // Track if animation is in progress
+          currentDirection: "down", // Default direction
+          moveDuration: 0.3, // Movement duration in seconds
+          idleTimeout: null, // Timer for inactivity
+        };
+    
+        // Generate the new map
+        generateMap(gameState2.map);
+    
+        // Update the global gameState
+        Object.assign(gameState, gameState2);
+    
+        // Update the player reference
+        gameState.player = document.querySelector(".player");
+    
+        // Update the player's position
+        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+    
+        // Start fade-out animation after loading the map
+        setTimeout(() => {
+          overlay.classList.remove("fade-in");
+          overlay.classList.add("fade-out");
+    
+          // Remove fade-out class after animation completes
+          setTimeout(() => {
+            overlay.classList.remove("fade-out");
+          }, 800); // Match the duration of the fade-out transition
+        }, 1000); // Short delay to ensure the map is fully loaded
+      }, 800); // Match the duration of the fade-in animation
+    } else if (targetTile === 12) {
+      gameProgress.region = 3; // Example: Change to region 2
+      updateGameInfo();
+      const overlay = document.getElementById("transition-overlay");
+      const textElement = document.getElementById("transition-text");
+    
+      // Set the transition message
+      textElement.textContent = "Travelling to a new part of the plane...";
+      
+      // Start fade-in animation
+      overlay.classList.add("fade-in");
+    
+      // Wait for fade-in animation to complete
+      setTimeout(() => {
+        // Define the new game state
+        const gameState2 = {
+          map: [
+            [1, 1, 8, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 11, 1, 1],
+            [-21, -1, -1, -1, -1, 2, -1, -1, 3],
+            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+            [201, 201, -109, 201, 201, 201, -109, 201, 201],
+            [202, 202, -110, 202, 202, 202, -110, 202, 202],
+            [203, 203, -111, 203, 203, 203, -111, 203, 203],
+            [204, 204, -112, 204, 204, 204, -112, 204, 204],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          ],
+          gridSize: 64, // Size of each grid cell
+          position: { x: 64, y: 128 }, // Starting position
+          player: null, // Will be updated after generating the map
+          isMoving: false, // Track if animation is in progress
+          currentDirection: "down", // Default direction
+          moveDuration: 0.3, // Movement duration in seconds
+          idleTimeout: null, // Timer for inactivity
+        };
+    
+        // Generate the new map
+        generateMap(gameState2.map);
+    
+        // Update the global gameState
+        Object.assign(gameState, gameState2);
+    
+        // Update the player reference
+        gameState.player = document.querySelector(".player");
+    
+        // Update the player's position
+        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+    
+        // Start fade-out animation after loading the map
+        setTimeout(() => {
+          overlay.classList.remove("fade-in");
+          overlay.classList.add("fade-out");
+    
+          // Remove fade-out class after animation completes
+          setTimeout(() => {
+            overlay.classList.remove("fade-out");
+          }, 800); // Match the duration of the fade-out transition
+        }, 1000); // Short delay to ensure the map is fully loaded
+      }, 800); // Match the duration of the fade-in animation
+    } else if (targetTile === 10) {
+      gameProgress.region = 1; // Example: Change to region 2
+      updateGameInfo();
+      const overlay = document.getElementById("transition-overlay");
+      const textElement = document.getElementById("transition-text");
+    
+      // Set the transition message
+      textElement.textContent = "Travelling to a new part of the plane...";
+      
+      // Start fade-in animation
+      overlay.classList.add("fade-in");
+    
+      // Wait for fade-in animation to complete
+      setTimeout(() => {
+        // Define the new game state
+        const gameState2 = {
+          map: [
+            [1, 1, 1, 1, 1, 1, 8, 1, 1],
+            [1, 9, 1, 1, 1, 1, 1, 1, 1],
+            [-21, -1, -1, -1, -1, 2, -1, -1, 3],
+            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+            [201, 201, -101, 201, 201, 201, -101, 201, 201],
+            [202, 202, -102, 202, 202, 202, -102, 202, 202],
+            [203, 203, -103, 203, 203, 203, -103, 203, 203],
+            [204, 204, -104, 204, 204, 204, -104, 204, 204],
+            [0, 0, 0, 0, 0, 0, 11, 0, 0],
+          ],
+          gridSize: 64, // Size of each grid cell
+          position: { x: 64, y: 128 }, // Starting position
+          player: null, // Will be updated after generating the map
+          isMoving: false, // Track if animation is in progress
+          currentDirection: "down", // Default direction
+          moveDuration: 0.3, // Movement duration in seconds
+          idleTimeout: null, // Timer for inactivity
+        };
+    
+        // Generate the new map
+        generateMap(gameState2.map);
+    
+        // Update the global gameState
+        Object.assign(gameState, gameState2);
+    
+        // Update the player reference
+        gameState.player = document.querySelector(".player");
+    
+        // Update the player's position
+        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+    
+        // Start fade-out animation after loading the map
+        setTimeout(() => {
+          overlay.classList.remove("fade-in");
+          overlay.classList.add("fade-out");
+    
+          // Remove fade-out class after animation completes
+          setTimeout(() => {
+            overlay.classList.remove("fade-out");
+          }, 800); // Match the duration of the fade-out transition
+        }, 1000); // Short delay to ensure the map is fully loaded
+      }, 800); // Match the duration of the fade-in animation
     }
   }
 }
@@ -428,4 +643,19 @@ function showPopup(title, message, imagePath = null) {
 
   // Add the pop-up to the body
   document.body.appendChild(popup);
+}
+
+
+function calculateAisle(value) {
+  const modulo = value % 100;
+  if (modulo >= 1 && modulo <= 26) {
+    return String.fromCharCode(64 + modulo); // ASCII: A=65, B=66, ...
+  }
+  return ""; 
+}
+
+
+function updateGameInfo() {
+  document.getElementById("region-info").textContent = `Airplane Region: ${gameProgress.region}/${gameProgress.totalRegions}`;
+  document.getElementById("secrets-info").textContent = `Secrets Discovered: ${gameProgress.secretsDiscovered.size}/${gameProgress.totalSecrets}`;
 }

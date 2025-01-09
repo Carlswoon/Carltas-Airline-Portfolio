@@ -40,6 +40,7 @@ body {
   background-color: #5d5d5d; /* Dark gray color for the wall */
   width: 100%; /* Full width */
   height: 64px; /* Standard height to match grid size */
+  
 }
 
 .wall-bottom {
@@ -420,4 +421,66 @@ body {
 
 #popup-box .popup-close:hover {
   background-color: #ff0000;
+}
+
+/* Black overlay for fade transition */
+#transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 100; /* Ensure it appears on top */
+  pointer-events: none; /* Prevent interactions */
+  opacity: 0; /* Fully transparent initially */
+  transition: opacity 0.8s ease-in-out;
+}
+
+#transition-overlay.fade-in {
+  opacity: 1; /* Fully visible during fade-in */
+}
+
+#transition-overlay.fade-out {
+  opacity: 0; /* Fully transparent during fade-out */
+}
+
+/* Text styles for the transition overlay */
+#transition-overlay .text-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  opacity: 0; /* Start invisible */
+  transition: opacity 0.5s ease-in-out; /* Smooth fade-in for the text */
+}
+
+#transition-overlay.fade-in .text-container {
+  opacity: 1; /* Fade in text during fade-in */
+}
+
+#transition-overlay.fade-out .text-container {
+  opacity: 0; /* Fade out text during fade-out */
+}
+
+
+#game-info {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 18px;
+  font-family: "zpix", sans-serif;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for visibility */
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 101; /* Ensure it appears above the game elements */
+}
+
+#game-info div {
+  margin-bottom: 5px;
 }
