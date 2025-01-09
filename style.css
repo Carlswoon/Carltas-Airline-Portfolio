@@ -484,3 +484,40 @@ body {
 #game-info div {
   margin-bottom: 5px;
 }
+
+
+#touch-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+#horizontal-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+#touch-controls button {
+  width: 60px;
+  height: 60px;
+  font-size: 20px;
+  background-color: #333;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#touch-controls button:hover {
+  background-color: #555;
+}
+
+#touch-controls button:active {
+  background-color: #777;
+}

@@ -349,7 +349,7 @@ function handleInteraction() {
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle L - Laugh with me Part 3', 'I once went to a fortune teller for him that for the next 20 years I will be poor and lonely. Jokes on him. I had no money to pay him :p', './assets/content/aisleL.jpg');
-    }else if (targetTile === 11) {
+    } else if (targetTile === 11) {
       gameProgress.region = 2; // Example: Change to region 2
       updateGameInfo();
       const overlay = document.getElementById("transition-overlay");
@@ -705,4 +705,33 @@ function calculateAisle(value) {
 function updateGameInfo() {
   document.getElementById("region-info").textContent = `Airplane Region: ${gameProgress.region}/${gameProgress.totalRegions}`;
   document.getElementById("secrets-info").textContent = `Secrets Discovered: ${gameProgress.secretsDiscovered.size}/${gameProgress.totalSecrets}`;
+}
+
+// Add touch controls
+const upBtn = document.getElementById("up-btn");
+const downBtn = document.getElementById("down-btn");
+const leftBtn = document.getElementById("left-btn");
+const rightBtn = document.getElementById("right-btn");
+const actionBtn = document.getElementById("action-btn");
+
+upBtn.addEventListener("click", () => triggerMovement("w"));
+downBtn.addEventListener("click", () => triggerMovement("s"));
+leftBtn.addEventListener("click", () => triggerMovement("a"));
+rightBtn.addEventListener("click", () => triggerMovement("d"));
+actionBtn.addEventListener("click", () => handleInteraction());
+
+// Function to simulate keypress events for movement
+function triggerMovement(key) {
+  const event = new KeyboardEvent("keydown", { key });
+  document.dispatchEvent(event);
+}
+
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+if (isMobile()) {
+  document.getElementById("touch-controls").style.display = "flex"; // Show touch controls
+} else {
+  document.getElementById("touch-controls").style.display = "none"; // Hide touch controls
 }
