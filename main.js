@@ -312,7 +312,7 @@ function handleInteraction() {
         gameProgress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
-      showPopup('Aisle F - Fears', 'I am afraid of bugs. Both in real life and in coding. Why do they have such weird looking legs TwT', './assets/content/aisleF.png');
+      showPopup('Aisle F - Fears', 'I am afraid of bugs. Both in real life and in coding. Why do they have such weird looking legs TwT', './assets/content/aisleF.JPG');
     } else if (targetTile === 207) {
       if (!gameProgress.secretsDiscovered.has(targetTile)) {
         gameProgress.secretsDiscovered.add(targetTile);
@@ -356,7 +356,7 @@ function handleInteraction() {
       const textElement = document.getElementById("transition-text");
     
       // Set the transition message
-      textElement.textContent = "Travelling to a new part of the plane...";
+      textElement.textContent = "Travelling to a new plane region...";
       
       // Start fade-in animation
       overlay.classList.add("fade-in");
