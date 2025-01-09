@@ -1,0 +1,423 @@
+@font-face {
+  font-family: 'Zpix';
+  src: url('./assets/fonts/zpix.ttf') format('truetype'); /* Adjust the path if necessary */
+}
+
+.zpix-font {
+  font-family: 'Zpix', sans-serif;
+}
+
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('./assets/setting/clouds.gif');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  margin: 0;
+  overflow: hidden; /* Prevent scrollbars */
+  background-size: 100%; /* Scale the background to 300% zoom */
+  background-position: center; /* Center the background */
+}
+
+#cockpit_door,
+#exploration_door {
+  visibility: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-rows: repeat(8, 64px); 
+  grid-template-columns: repeat(9, 64px);
+  background-color: transparent;
+  width: fit-content;
+  margin: auto;
+}
+
+.wall {
+  background-color: #5d5d5d; /* Dark gray color for the wall */
+  width: 100%; /* Full width */
+  height: 64px; /* Standard height to match grid size */
+}
+
+.wall-bottom {
+  border-bottom: 2px solid rgb(41, 41, 41); /* Adjust thickness and color as needed */
+}
+
+#game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  overflow: hidden; /* Prevent scrollbars */
+}
+
+/* Plane Interior */
+#plane {
+  display: grid;
+  grid-template-rows: repeat(8, 64px); 
+  grid-template-columns: repeat(9, 64px); 
+  background-color: #4A4A4A; /* Plane floor color */
+  border: 10px solid #333; /* Border around the plane */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Adds a shadow effect */
+  transform: scale(1.5); /* Scale to 150% */
+  transform-origin: center; /* Keep scaling centered */
+}
+
+/* Seat Styling */
+.seat {
+  background-image: url('./assets/setting/airplane chair.png'); /* Replace with your chair asset */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated; /* Keeps the sprite sharp */
+}
+
+
+.upper_door {
+  background-color: #6e6d6d;
+  width: 64px;
+  height: 64px;
+}
+
+.cockpit-text {
+  font-family: "Press Start 2P", serif; /* Pixel-style font */
+  font-size: 9.2px;
+  font-weight: bold;
+  color: #ffffff; /* Text color */
+  z-index: 11;
+  height: 15px;
+  background-color: rgb(227, 1, 1);
+}
+
+
+.lower_door {
+  background-color: black;
+  width: 64px;
+  height: 10px;
+}
+
+.airplane_logo {
+  background-image: url('./assets/setting/airplane_logo.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated; 
+  width: 64px;
+  height: 30px;
+  transform: scale(4) translateY(38%) translateX(10%);
+  background-color: #5d5d5d;
+  z-index: ;
+}
+
+.floor {
+  width: 64px;
+  height: 64px;
+  background-color: #4A4A4A; 
+}
+
+.aisle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Press Start 2P", serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #7B2D26; 
+  width: 64px; 
+  height: 64px; 
+}
+
+.stewardess1 {
+  width: 64px; /* Width of a single frame */
+  height: 64px; /* Height of a single frame */
+  background-image: url('./assets/characters/stewardess.png'); /* Path to sprite sheet */
+  background-size: auto; /* Size of the entire sprite sheet */
+  background-size: auto; /* Ensure proper scaling */
+  background-position: 0px -1536px; /* Start at row 25, column 1 */
+  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  transform: scale(1.5) translateY(-40%);
+  background-color: transparent;
+  image-rendering: pixelated; /* Keeps the sprite sharp */
+  background-repeat: no-repeat; 
+  
+}
+
+.stewardess2 {
+  width: 64px; /* Width of a single frame */
+  height: 64px; /* Height of a single frame */
+  background-image: url('./assets/characters/stewardess_2.png'); /* Path to sprite sheet */
+  background-size: auto; /* Ensure proper scaling */
+  background-position: 0px -1536px; /* Start at row 25, column 1 */
+  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  transform: scale(1.5) translateY(-40%);
+  background-color: transparent;
+  image-rendering: pixelated; /* Keeps the sprite sharp */
+  background-repeat: no-repeat; 
+}
+
+.player {
+  width: 64px; /* Width of a single frame */
+  height: 64px; /* Height of a single frame */
+  background-image: url('./assets/characters/main_character.png'); /* Path to sprite sheet */
+  background-size: auto; /* Ensure proper scaling */
+  background-position: 0px -1536px; /* Start at row 25, column 1 */
+  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  transform: scale(1.5) translateY(-40%);
+  background-color: transparent;
+  image-rendering: pixelated; /* Keeps the sprite sharp */
+  background-repeat: no-repeat; 
+  z-index: 100;
+}
+
+/* Walking animations */
+.player.moving-up {
+  animation: moveUp 0.8s steps(4) forwards; /* Walk up animation */
+}
+
+.player.moving-left {
+  animation: moveLeft 0.8s steps(4) forwards; /* Walk left animation */
+}
+
+.player.moving-down {
+  animation: moveDown 0.8s steps(4) forwards; /* Walk down animation */
+}
+
+.player.moving-right {
+  animation: moveRight 0.8s steps(4) forwards; /* Walk right animation */
+}
+
+/* row 23 (up), row24 (left),  row 26 (right)
+/* Idle animation (Row 25) */
+@keyframes idleAnimationDown {
+  0% {
+    background-position: 0px -1536px; /* Row 25, Column 1 */
+  }
+  100% {
+    background-position: -128px -1536px; /* Row 25, Column 2 */
+  }
+}
+
+@keyframes idleAnimationLeft {
+  0% {
+    background-position: 0px -1472px; /* Row 25, Column 1 */
+  }
+  100% {
+    background-position: -128px -1472px; /* Row 25, Column 2 */
+  }
+}
+
+@keyframes idleAnimationUp {
+  0% {
+    background-position: 0px -1408px; /* Row 25, Column 1 */
+  }
+  100% {
+    background-position: -128px -1408px; /* Row 25, Column 2 */
+  }
+}
+
+@keyframes idleAnimationRight {
+  0% {
+    background-position: 0px -1600px; /* Row 25, Column 1 */
+  }
+  100% {
+    background-position: -128px -1600px; /* Row 25, Column 2 */
+  }
+}
+
+/* Walking animations (updated for 9 frames) */
+@keyframes moveUp {
+  0% {
+    background-position: 0px -512px; /* Row 9, Column 1 */
+  }
+  100% {
+    background-position: -576px -512px; /* Row 9, Column 9 */
+  }
+}
+
+@keyframes moveLeft {
+  0% {
+    background-position: 0px -576px; /* Row 10, Column 1 */
+  }
+  100% {
+    background-position: -576px -576px; /* Row 10, Column 9 */
+  }
+}
+
+@keyframes moveDown {
+  0% {
+    background-position: 0px -640px; /* Row 11, Column 1 */
+  }
+  100% {
+    background-position: -576px -640px; /* Row 11, Column 9 */
+  }
+}
+
+@keyframes moveRight {
+  0% {
+    background-position: 0px -704px; /* Row 12, Column 1 */
+  }
+  100% {
+    background-position: -576px -704px; /* Row 12, Column 9 */
+  }
+}
+
+#dialog-box.hidden {
+  display: none;
+}
+
+#dialog-box {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-top: 2px solid white;
+  padding: 1vh 2vw; /* Padding for spacing */
+  color: white;
+  font-family: "zpix", serif;
+  font-size: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 20%; /* Increased height to make room for options */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+#dialog-name {
+  font-weight: bold;
+  font-size: 4vh;
+  margin-bottom: 1vh;
+}
+
+#dialog-text {
+  font-size: 2vh;
+  margin-bottom: 1vh;
+}
+
+#dialog-responses {
+  position: absolute;
+  bottom: 10px; /* Align closer to the top of the dialog box */
+  right: 10px; /* Add padding from the right */
+  text-align: right;
+  z-index: 1100;
+  max-width: calc(100% - 20px); /* Prevent overflow */
+}
+
+#dialog-responses ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#dialog-responses li {
+  font-family: "zpix", serif;
+  font-size: 2vh;
+  color: white;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+#dialog-responses li.selected {
+  color: yellow;
+  font-size: 2.5vh;
+}
+
+/* 8-Bit Styled Pop-Up */
+#popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px; /* Adjust width */
+  width: 450px;
+  background-color: #ffe680;; /* Bright yellow for 8-bit style */
+  border: 4px solid #000; /* Black border for contrast */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  font-family: 'Press Start 2P', serif; /* Use pixel-style font */
+  font-size: 14px;
+  color: #000;
+  text-align: left;
+  z-index: 1100;
+  padding: 20px;
+  image-rendering: pixelated;
+  max-height: 90vh; /* Prevent popup from exceeding viewport height */
+}
+/* Header (Title) */
+#popup-box .popup-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #000; /* Underline for title */
+  padding-bottom: 5px;
+  color: #333;
+}
+
+/* Content Section */
+#popup-box .popup-content {
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
+  margin-top: 10px;
+  flex-grow: 1; /* Allow the content section to grow */
+  gap: 10px; /* Space between text and image */
+}
+
+/* Text Section */
+#popup-box .popup-text {
+  flex-grow: 1; /* Allow the text to take up remaining space */
+  font-size: 14px;
+  line-height: 1.8;
+  color: #222; /* Darker text color for readability */
+  overflow-wrap: break-word; /* Prevent long words from breaking layout */
+}
+
+/* Image Section */
+#popup-box .popup-image {
+  width: 100px; /* Fixed width for the image */
+  height: 100px; /* Fixed height for the image */
+  flex-shrink: 0; /* Prevent the image from resizing */
+  background-color: #fff;
+  border: 2px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  overflow: hidden; /* Prevent image overflow */
+}
+
+#popup-box .popup-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image scales properly */
+}
+
+/* X Button Styling */
+#popup-box .popup-close {
+  position: absolute;
+  top: -15px; /* Slightly above the box */
+  right: -15px; /* Slightly to the right */
+  width: 35px;
+  height: 35px;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Press Start 2P', serif;
+  font-size: 16px;
+  text-align: center;
+  line-height: 35px;
+  border: 2px solid #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#popup-box .popup-close:hover {
+  background-color: #ff0000;
+}
