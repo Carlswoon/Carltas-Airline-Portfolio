@@ -49,11 +49,13 @@ body {
 
 #game-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  height: 100vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
-  overflow: hidden; /* Prevent scrollbars */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Plane Interior */
@@ -66,6 +68,13 @@ body {
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Adds a shadow effect */
   transform: scale(1.5); /* Scale to 150% */
   transform-origin: center; /* Keep scaling centered */
+}
+
+#plane-container {
+  flex: 1; /* Use remaining space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Seat Styling */
@@ -341,6 +350,7 @@ body {
   transform: translate(-50%, -50%);
   width: 450px; /* Adjust width */
   width: 450px;
+  max-width: 90%;
   background-color: #ffe680;; /* Bright yellow for 8-bit style */
   border: 4px solid #000; /* Black border for contrast */
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
@@ -487,37 +497,60 @@ body {
 
 
 #touch-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   position: fixed;
-  bottom: 20px;
+  bottom: 20px; /* Adjust to position above the bottom edge */
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   z-index: 1000;
 }
 
-#horizontal-controls {
+#vertical-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between up/down and center row */
+}
+
+#center-controls {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 10px; /* Space between left, E, and right buttons */
 }
 
 #touch-controls button {
   width: 60px;
   height: 60px;
-  font-size: 20px;
-  background-color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
   color: white;
+  background-color: #333;
   border: 2px solid white;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-}
-
-#touch-controls button:hover {
-  background-color: #555;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 #touch-controls button:active {
-  background-color: #777;
+  background-color: #555;
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#enter-btn {
+  width: 60px;
+  height: 60px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #444;
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 10px; /* Space from the arrow key layout */
 }

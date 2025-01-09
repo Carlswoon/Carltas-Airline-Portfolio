@@ -713,6 +713,12 @@ const downBtn = document.getElementById("down-btn");
 const leftBtn = document.getElementById("left-btn");
 const rightBtn = document.getElementById("right-btn");
 const actionBtn = document.getElementById("action-btn");
+const enterBtn = document.getElementById("enter-btn");
+
+enterBtn.addEventListener("click", () => {
+  const event = new KeyboardEvent("keydown", { key: "Enter" });
+  document.dispatchEvent(event);
+});
 
 upBtn.addEventListener("click", () => triggerMovement("w"));
 downBtn.addEventListener("click", () => triggerMovement("s"));

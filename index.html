@@ -10,36 +10,46 @@
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="game-info">
-    <div id="region-info">Airplane Region: 1/3</div>
-    <div id="secrets-info">Secrets Discovered: 0/17</div>
-  </div>
-  
   <div id="game-container">
-    
-    <div id="plane">
-      <div class="grid"></div>
+    <!-- Game Info -->
+    <div id="game-info">
+      <div id="region-info">Airplane Region: 1/3</div>
+      <div id="secrets-info">Secrets Discovered: 0/17</div>
     </div>
-  </div>
+
+    <!-- Plane Section -->
+    <div id="plane-container">
+      <div id="plane">
+        <div class="grid"></div>
+      </div>
+    </div>
+
+    <!-- Touch Controls -->
+    <div id="touch-controls">
+      <div id="vertical-layout">
+        <button id="up-btn">▲</button>
+        <div id="center-controls">
+          <button id="left-btn">◀</button>
+          <button id="action-btn">E</button>
+          <button id="right-btn">▶</button>
+        </div>
+        <button id="down-btn">▼</button>
+      </div>
+      <button id="enter-btn">Enter</button>
+    </div>
+
+  <!-- Dialog Box -->
   <div id="dialog-box" class="hidden">
     <div id="dialog-name"></div>
     <div id="dialog-text"></div>
     <div id="dialog-responses"></div>
   </div>
+
+  <!-- Transition Overlay -->
   <div id="transition-overlay">
     <div class="text-container" id="transition-text"></div>
-  </div>  
-
-  <div id="touch-controls">
-    <button id="up-btn">▲</button>
-    <div id="horizontal-controls">
-      <button id="left-btn">◀</button>
-      <button id="action-btn">E</button>
-      <button id="right-btn">▶</button>
-    </div>
-    <button id="down-btn">▼</button>
   </div>
-  
+
   <script src="main.js" defer></script>
 </body>
 </html>
