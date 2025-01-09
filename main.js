@@ -295,14 +295,61 @@ function handleInteraction() {
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle C - Characteristics', 'Considerate, Dilligent, Easygoing, Funny, Honest', './assets/content/aisleC.png');
-    }
-    else if (targetTile === 204) {
+    } else if (targetTile === 204) {
       if (!gameProgress.secretsDiscovered.has(targetTile)) {
         gameProgress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle D - Dreams', 'I want to create a language learning app (better than duolingo) that will actually help people learn languages and become fluent in them.', './assets/content/aisleD.jpg');
-    } else if (targetTile === 11) {
+    } else if (targetTile === 205) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle E - Energy Sources', 'Chocolate, Kpop (good music in general), MEMES', './assets/content/aisleE.gif');
+    } else if (targetTile === 206) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle F - Fears', 'I am afraid of bugs. Both in real life and in coding. Why do they have such weird looking legs TwT', './assets/content/aisleF.png');
+    } else if (targetTile === 207) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle G - Gratitude', 'Grateful to my older brother to telling me to watch Harvard\'s CS50 before I was about to choose chemical engineering to study at UNSW', './assets/content/aisleG.avif');
+    } else if (targetTile === 208) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle H - Hobbies', 'Language learning. I am currently learning Chinese (doing ARTS2450 and ARTS2451 this year!) and Korean. Would like to become a polyglot. Also like dancing.', './assets/content/aisleH.jpg');
+    } else if (targetTile === 209) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle I - Incredible Puns', 'If I don\'t get arrays from my boss I will error 404', './assets/content/aisleI.jpg');
+    } else if (targetTile === 210) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle J - Joke Time', '01101100 01100101 01110100 00100000 01101000 01101001 01101101 00100000 01100011 01101111 01101111 01101011', './assets/content/aisleJ.png');
+    } else if (targetTile === 211) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle K - Kidding Time part 2', 'Yo computer science teaching mama so fat, she can flatten a binary tree in O(1). (this is not targeted at your mum)', './assets/content/aisleK.png');
+    } else if (targetTile === 212) {
+      if (!gameProgress.secretsDiscovered.has(targetTile)) {
+        gameProgress.secretsDiscovered.add(targetTile);
+        updateGameInfo(); // Update the display
+      }
+      showPopup('Aisle L - Laugh with me Part 3', 'I once went to a fortune teller for him that for the next 20 years I will be poor and lonely. Jokes on him. I had no money to pay him :p', './assets/content/aisleL.jpg');
+    }else if (targetTile === 11) {
       gameProgress.region = 2; // Example: Change to region 2
       updateGameInfo();
       const overlay = document.getElementById("transition-overlay");
@@ -323,10 +370,10 @@ function handleInteraction() {
             [1, 1, 1, 1, 1, 1, 10, 1, 1],
             [-21, -1, -1, -1, -1, 2, -1, -1, 3],
             [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [201, 201, -105, 201, 201, 201, -105, 201, 201],
-            [202, 202, -106, 202, 202, 202, -106, 202, 202],
-            [203, 203, -107, 203, 203, 203, -107, 203, 203],
-            [204, 204, -108, 204, 204, 204, -108, 204, 204],
+            [205, 205, -105, 205, 205, 205, -105, 205, 205],
+            [206, 206, -106, 206, 206, 206, -106, 206, 206],
+            [207, 207, -107, 207, 207, 207, -107, 207, 207],
+            [208, 208, -108, 208, 208, 208, -108, 208, 208],
             [0, 0, 0, 0, 0, 0, 12, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
@@ -382,10 +429,10 @@ function handleInteraction() {
             [1, 1, 1, 1, 1, 1, 11, 1, 1],
             [-21, -1, -1, -1, -1, 2, -1, -1, 3],
             [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [201, 201, -109, 201, 201, 201, -109, 201, 201],
-            [202, 202, -110, 202, 202, 202, -110, 202, 202],
-            [203, 203, -111, 203, 203, 203, -111, 203, 203],
-            [204, 204, -112, 204, 204, 204, -112, 204, 204],
+            [209, 209, -109, 209, 209, 209, -109, 209, 209],
+            [210, 210, -110, 210, 210, 210, -110, 210, 210],
+            [211, 211, -111, 211, 211, 211, -111, 211, 211],
+            [212, 212, -112, 212, 212, 212, -112, 212, 212],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
