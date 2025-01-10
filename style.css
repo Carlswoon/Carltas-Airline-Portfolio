@@ -620,16 +620,11 @@ body {
   transition: all 0.3s ease;
 }
 
-#start-button {
-  transform: scale(1.5);
-}
-
 #title-page .footer {
   font-size: 12px;
   margin-top: 20px;
   color: #aaa;
 }
-
 
 /* Modal overlay */
 #fact-sheet-modal {
