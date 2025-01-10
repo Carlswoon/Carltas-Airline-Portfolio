@@ -666,9 +666,12 @@ body {
 
 /* Picture container */
 .modal-pic img {
-  width: 60px;
-  height: 60px;
-  border-radius: 5px;
+  width: 100px;
+  height: 50px;
+  background-size: cover;
+  margin-bottom: 10px;
+  image-rendering: pixelated;
+
   margin-right: 15px;
 }
 
@@ -735,3 +738,100 @@ body {
   animation: fly-across 10s linear infinite; /* 8 seconds for one loop */
 }
 
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.destination-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 400px;
+}
+
+.destination-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.destination-content li {
+  margin: 10px 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #007BFF;
+}
+
+.destination-content li:hover {
+  text-decoration: underline;
+}
+
+#close-modal {
+  margin-top: 20px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', 'Nanum Gothic', sans-serif;;
+}
+
+#close-modal:hover {
+  background-color: #0056b3;
+}
+
+#destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  gap: 20px; /* Space between items */
+  justify-items: center;
+  margin-top: 20px;
+}
+
+.destination-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 100px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.destination-item:hover {
+  background-color: #007bff;
+  transform: scale(1.05);
+  color: white;
+}
+
+.destination-item img {
+  width: 100px;
+  height: 50px;
+  background-size: cover;
+  margin-bottom: 10px;
+  image-rendering: pixelated;
+}
+
+.destination-item span {
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}

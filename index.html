@@ -14,7 +14,7 @@
     <h1>Where's Carlson?</h1>
     <img src="./assets/content/titlePage.png" alt="Traveling Plane" id="traveling-plane">
     <button id="start-button">Start Game</button>
-    <button id="unlock-secrets-button">Unlock All Secrets</button>
+    <button id="destinations-button">Destinations</button>
     <button id="help-button" class="corner-button">?</button>
     <div class="footer">© 2025 Carltas Airlines. All rights reserved.</div>
   </div>
@@ -63,6 +63,39 @@
   <div id="fact-sheet-modal" class="hidden">
     <div class="modal-content">
       </div>
+    </div>
+  </div>
+
+  <div id="destinations-modal" class="modal hidden">
+    <div class="destination-content">
+      <h2>Choose Your Destination</h2>
+      <div id="destinations-grid">
+        <div class="destination-item" data-country="Australia">
+          <img src="./assets/flags/Australia.png" alt="Australia Flag" class="flag">
+          <span>Australia</span>
+        </div>
+        <div class="destination-item" data-country="China">
+          <img src="./assets/flags/China.png" alt="China Flag" class="flag">
+          <span>China</span>
+        </div>
+        <div class="destination-item" data-country="America">
+          <img src="./assets/flags/America.png" alt="America Flag" class="flag">
+          <span>America</span>
+        </div>
+        <div class="destination-item" data-country="Korea">
+          <img src="./assets/flags/Korea.png" alt="Korea Flag" class="flag">
+          <span>Korea</span>
+        </div>
+        <div class="destination-item" data-country="Philippines">
+          <img src="./assets/flags/Philippines.png" alt="Philippines Flag" class="flag">
+          <span>Philippines</span>
+        </div>
+        <div class="destination-item" data-country="DANGER">
+          <img src="./assets/flags/Danger.png" alt="DANGER" class="flag">
+          <span>DANGER!!</span>
+        </div>
+      </div>
+      <button id="close-modal">Close</button>
     </div>
   </div>
   <script src="main.js" defer></script>

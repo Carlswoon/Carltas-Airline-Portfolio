@@ -1,3 +1,13 @@
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+if (isMobile()) {
+  document.getElementById("touch-controls").style.display = "flex"; // Show touch controls
+} else {
+  document.getElementById("touch-controls").style.display = "none"; // Hide touch controls
+}
+
 const gameProgress = {
   region: 1, // Current airplane region
   totalRegions: 3, // Total regions
@@ -112,8 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const helpButton = document.getElementById('help-button');
   const titlePage = document.getElementById('title-page');
   const gameContainer = document.getElementById('game-container');
-  const factSheetModal = document.getElementById('fact-sheet-modal');
-  const closeModalButton = document.getElementById('close-modal-button');
   // State to track whether the game is active or on the home screen
   let isGameActive = false;
 
@@ -127,19 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
     isGameActive = true;
   });
 
-  unlockSecretsButton.addEventListener('click', () => {
-    createModal({
-      title: 'About Me',
-      imageSrc: 'your-image.jpg', // Replace with the path to your image
-      facts: [
-        'Name: Carlson',
-        'Hobbies: Dancing, programming, and learning languages',
-        'Languages: English, Korean, Chinese, Tagalog, Ilonggo',
-        'Current Studies: Computer Science at UNSW',
-        'Fun Fact: I started learning Korean in 2024!'
-      ],
-    });
-  });
   // Event listener for the Help ("?") button
   helpButton.addEventListener('click', () => {
     createModal({
@@ -783,17 +778,6 @@ function triggerMovement(key) {
   document.dispatchEvent(event);
 }
 
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-if (isMobile()) {
-  document.getElementById("touch-controls").style.display = "flex"; // Show touch controls
-} else {
-  document.getElementById("touch-controls").style.display = "none"; // Hide touch controls
-}
-
-
 function createModal({ title, imageSrc, facts }) {
   // Create the modal container
   const modal = document.createElement('div');
@@ -852,3 +836,61 @@ setRandomHeight();
 
 // Add an event listener to restart the height at the end of each animation cycle
 plane.addEventListener('animationiteration', setRandomHeight);
+
+
+const destinationsGrid = document.getElementById('destinations-grid');
+const modal = document.getElementById('destinations-modal');
+const closeModalButton = document.getElementById('close-modal');
+
+
+// Show the modal
+document.getElementById('destinations-button').addEventListener('click', () => {
+  modal.classList.remove('hidden');
+});
+
+// Close the modal
+closeModalButton.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+// Handle destination clicks
+destinationsGrid.addEventListener('click', (e) => {
+  const destinationItem = e.target.closest('.destination-item');
+  if (destinationItem) {
+    const country = destinationItem.dataset.country;
+    const countryDetails = {
+      Australia: {
+        title: 'Australia',
+        text: 'I live in Sydney, and I study Computer Science at UNSW.',
+        image: './assets/flags/Australia.png',
+      },
+      China: {
+        title: 'China',
+        text: "I'm learning Mandarin and love Chinese cuisine like dumplings and hotpot.",
+        image: './assets/flags/China.png',
+      },
+      America: {
+        title: 'America',
+        text: "I've always admired Silicon Valley and the tech scene in the US!",
+        image: './assets/flags/America.png',
+      },
+      Korea: {
+        title: 'Korea',
+        text: 'Kdrama!',
+        image: './assets/flags/Korea.png',
+      },
+    };
+
+    // Get the content for the selected country
+    const details = countryDetails[country];
+    if (details) {
+      createModal({
+        title: details.title,
+        imageSrc: details.image,
+        facts: [
+          details.text
+        ],
+      });
+    }
+  }
+});
