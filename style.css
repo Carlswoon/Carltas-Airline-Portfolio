@@ -10,7 +10,7 @@
 /* General Styling */
 body {
   font-family: 'Press Start 2P', 'Nanum Gothic', sans-serif;
-  background-image: url('./assets/setting/clouds.gif');
+  background-image: url('./assets/setting/clouds.png');
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,8 +18,9 @@ body {
   width: 100vw; /* Full width of the viewport */
   margin: 0;
   overflow: hidden; /* Prevent scrollbars */
-  background-size: 100%; /* Scale the background to 300% zoom */
-  background-position: center; /* Center the background */
+  background-size: cover; /* Ensures the background fills the viewport */
+  background-repeat: no-repeat; /* Prevents the background from repeating */
+  background-position: center; /* Centers the background */
 }
 
 #cockpit_door,
@@ -710,3 +711,27 @@ body {
 .close-button:hover {
   background-color: #ff0000;
 }
+
+#traveling-plane {
+  position: absolute;
+  top: 20%; /* Adjust to position the plane vertically */
+  left: -100px; /* Start off-screen to the left */
+  width: 50px; /* Adjust size as needed */
+  height: auto;
+  z-index: -1;
+  transform: scale(6);
+}
+
+@keyframes fly-across {
+  0% {
+    left: -100px; /* Start off-screen to the left */
+  }
+  100% {
+    left: 110%; /* End off-screen to the right */
+  }
+}
+
+#traveling-plane {
+  animation: fly-across 10s linear infinite; /* 8 seconds for one loop */
+}
+

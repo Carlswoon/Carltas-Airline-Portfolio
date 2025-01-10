@@ -2,7 +2,7 @@ const gameProgress = {
   region: 1, // Current airplane region
   totalRegions: 3, // Total regions
   secretsDiscovered: new Set(), // Set to track unique interactions
-  totalSecrets: 17, // Total secrets
+  totalSecrets: 15, // Total secrets
 };
 
 function generateMap(mapArray) {
@@ -838,3 +838,17 @@ function createModal({ title, imageSrc, facts }) {
   // Show the modal by removing the "hidden" class
   modal.classList.remove('hidden');
 }
+
+const plane = document.getElementById('traveling-plane');
+
+// Function to set a random height
+function setRandomHeight() {
+  const randomTop = Math.floor(Math.random() * 80); // Random value between 0 and 80 (percentage of the viewport height)
+  plane.style.top = `${randomTop}vh`; // Set the top position in viewport height units
+}
+
+// Set initial random height
+setRandomHeight();
+
+// Add an event listener to restart the height at the end of each animation cycle
+plane.addEventListener('animationiteration', setRandomHeight);
