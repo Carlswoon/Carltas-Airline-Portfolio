@@ -106,44 +106,96 @@ function canMoveTo(newX, newY) {
   );
 }
 
-// Handle keydown for movement
-document.addEventListener("keydown", async (event) => {
-  if (gameState.isMoving) return; // Prevent interrupting an ongoing animation
-  let newX = gameState.position.x;
-  let newY = gameState.position.y;
+document.addEventListener('DOMContentLoaded', () => {
+  const startButton = document.getElementById('start-button');
+  const unlockSecretsButton = document.getElementById('unlock-secrets-button');
+  const helpButton = document.getElementById('help-button');
+  const titlePage = document.getElementById('title-page');
+  const gameContainer = document.getElementById('game-container');
+  const factSheetModal = document.getElementById('fact-sheet-modal');
+  const closeModalButton = document.getElementById('close-modal-button');
+  // State to track whether the game is active or on the home screen
+  let isGameActive = false;
 
-  switch (event.key.toLowerCase()) {
-    case "w": // Move up
-      newY -= gameState.gridSize;
-      gameState.currentDirection = "up";
-      break;
-    case "a": // Move left
-      newX -= gameState.gridSize;
-      gameState.currentDirection = "left";
-      break;
-    case "s": // Move down
-      newY += gameState.gridSize;
-      gameState.currentDirection = "down";
-      break;
-    case "d": // Move right
-      newX += gameState.gridSize;
-      gameState.currentDirection = "right";
-      break;
-    case "e":
-      handleInteraction();
-      return;
-    default:
-      return; // Ignore other keys
-  }
+  // Event listener for the Start Game button
+  startButton.addEventListener('click', () => {
+    // Hide the title page
+    titlePage.classList.add('hidden');
+    // Show the game container
+    gameContainer.style.display = 'block';
+    // Activate the game state
+    isGameActive = true;
+  });
 
-  if (canMoveTo(newX, newY)) {
-    gameState.position.x = newX;
-    gameState.position.y = newY;
-    movePlayer();
-  } else {
-    setIdleAnimation(gameState.currentDirection);
-  }
-  
+  unlockSecretsButton.addEventListener('click', () => {
+    createModal({
+      title: 'About Me',
+      imageSrc: 'your-image.jpg', // Replace with the path to your image
+      facts: [
+        'Name: Carlson',
+        'Hobbies: Dancing, programming, and learning languages',
+        'Languages: English, Korean, Chinese, Tagalog, Ilonggo',
+        'Current Studies: Computer Science at UNSW',
+        'Fun Fact: I started learning Korean in 2024!'
+      ],
+    });
+  });
+  // Event listener for the Help ("?") button
+  helpButton.addEventListener('click', () => {
+    createModal({
+      title: 'Help Me',
+      imageSrc: './assets/content/aisleA.jpg', // Replace with the path to your image
+      facts: [
+        'Name: Carlson',
+        'Hobbies: Dancing, programming, and learning languages',
+        'Languages: English, Korean, Chinese, Tagalog, Ilonggo',
+        'Current Studies: Computer Science at UNSW',
+        'Fun Fact: I started learning Korean in 2024!'
+      ],
+    });
+  });
+
+  // Handle keydown for movement
+  document.addEventListener('keydown', async (event) => {
+    // Ignore key inputs if the game is not active
+    if (!isGameActive) return;
+
+    if (gameState.isMoving) return; // Prevent interrupting an ongoing animation
+    let newX = gameState.position.x;
+    let newY = gameState.position.y;
+
+    switch (event.key.toLowerCase()) {
+      case "w": // Move up
+        newY -= gameState.gridSize;
+        gameState.currentDirection = "up";
+        break;
+      case "a": // Move left
+        newX -= gameState.gridSize;
+        gameState.currentDirection = "left";
+        break;
+      case "s": // Move down
+        newY += gameState.gridSize;
+        gameState.currentDirection = "down";
+        break;
+      case "d": // Move right
+        newX += gameState.gridSize;
+        gameState.currentDirection = "right";
+        break;
+      case "e":
+        handleInteraction();
+        return;
+      default:
+        return; // Ignore other keys
+    }
+
+    if (canMoveTo(newX, newY)) {
+      gameState.position.x = newX;
+      gameState.position.y = newY;
+      movePlayer();
+    } else {
+      setIdleAnimation(gameState.currentDirection);
+    }
+  });
 });
 
 function movePlayer() {
@@ -377,7 +429,7 @@ function handleInteraction() {
             [0, 0, 0, 0, 0, 0, 12, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
-          position: { x: 64, y: 128 }, // Starting position
+          position: { x: 384, y: 128 }, // Starting position
           player: null, // Will be updated after generating the map
           isMoving: false, // Track if animation is in progress
           currentDirection: "down", // Default direction
@@ -436,7 +488,7 @@ function handleInteraction() {
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
-          position: { x: 64, y: 128 }, // Starting position
+          position: { x: 384, y: 128 }, // Starting position
           player: null, // Will be updated after generating the map
           isMoving: false, // Track if animation is in progress
           currentDirection: "down", // Default direction
@@ -495,10 +547,10 @@ function handleInteraction() {
             [0, 0, 0, 0, 0, 0, 11, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
-          position: { x: 64, y: 128 }, // Starting position
+          position: { x: 384, y: 448 }, // Starting position
           player: null, // Will be updated after generating the map
           isMoving: false, // Track if animation is in progress
-          currentDirection: "down", // Default direction
+          currentDirection: "up", // Default direction
           moveDuration: 0.3, // Movement duration in seconds
           idleTimeout: null, // Timer for inactivity
         };
@@ -514,7 +566,7 @@ function handleInteraction() {
     
         // Update the player's position
         gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
-    
+        setIdleAnimation("up");
         // Start fade-out animation after loading the map
         setTimeout(() => {
           overlay.classList.remove("fade-in");
@@ -558,7 +610,6 @@ function handleDialogInput(event) {
 
   gameState.dialog.selectedIndex = selectedIndex; // Update the selected index
 }
-
 
 function updateDialogSelection(selectedIndex) {
   const dialogBox = document.getElementById("dialog-box");
@@ -740,4 +791,50 @@ if (isMobile()) {
   document.getElementById("touch-controls").style.display = "flex"; // Show touch controls
 } else {
   document.getElementById("touch-controls").style.display = "none"; // Hide touch controls
+}
+
+
+function createModal({ title, imageSrc, facts }) {
+  // Create the modal container
+  const modal = document.createElement('div');
+  modal.id = 'fact-sheet-modal';
+  modal.className = 'hidden';
+
+  // Modal content
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="close-button">×</button>
+      <div class="modal-header">
+        <div class="modal-pic">
+          <img src="${imageSrc}" alt="Picture" />
+        </div>
+        <h1 class="modal-title">${title}</h1>
+      </div>
+      <div class="modal-body">
+        <ul>
+          ${facts.map((fact) => `<li>${fact}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
+
+  // Add close functionality
+  modal.querySelector('.close-button').addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.remove(); // Remove modal from DOM after closing
+  });
+
+  // Optional: Close modal when clicking outside the content
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.classList.add('hidden');
+      modal.remove(); // Remove modal from DOM after closing
+    }
+  });
+
+  // Append the modal to the body
+  document.body.appendChild(modal);
+
+  // Show the modal by removing the "hidden" class
+  modal.classList.remove('hidden');
 }

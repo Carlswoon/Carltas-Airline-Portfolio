@@ -10,6 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="title-page">
+    <h1>Carltas Airlines</h1>
+    <button id="start-button">Start Game</button>
+    <button id="unlock-secrets-button">Unlock All Secrets</button>
+    <button id="help-button" class="corner-button">?</button>
+    <div class="footer">© 2025 Carltas Airlines. All rights reserved.</div>
+  </div>
+  
   <div id="game-container">
     <!-- Game Info -->
     <div id="game-info">
@@ -23,7 +31,8 @@
         <div class="grid"></div>
       </div>
     </div>
-
+  </div>
+  
     <!-- Touch Controls -->
     <div id="touch-controls">
       <div id="vertical-layout">
@@ -50,6 +59,27 @@
     <div class="text-container" id="transition-text"></div>
   </div>
 
+  <div id="fact-sheet-modal" class="hidden">
+    <div class="modal-content">
+      <button id="close-modal-button" class="close-button">×</button>
+      <div class="modal-header">
+        <div class="modal-pic">
+          <!-- Replace with an image -->
+          <img src="your-image.jpg" alt="Picture" />
+        </div>
+        <h1 class="modal-title">About Me</h1>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>Name: Carlson</li>
+          <li>Hobbies: Dancing, programming, and learning languages</li>
+          <li>Languages: English, Korean, Chinese, Tagalog, Ilonggo</li>
+          <li>Current Studies: Computer Science at UNSW</li>
+          <li>Fun Fact: I started learning Korean in 2024!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <script src="main.js" defer></script>
 </body>
 </html>
