@@ -495,66 +495,6 @@ body {
   margin-bottom: 5px;
 }
 
-
-#touch-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  position: fixed;
-  bottom: 20px; /* Adjust to position above the bottom edge */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
-
-#vertical-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* Space between up/down and center row */
-}
-
-#center-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* Space between left, E, and right buttons */
-}
-
-#touch-controls button {
-  width: 60px;
-  height: 60px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-  background-color: #333;
-  border: 2px solid white;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-#touch-controls button:active {
-  background-color: #555;
-  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-#enter-btn {
-  width: 60px;
-  height: 60px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #444;
-  color: white;
-  border: 2px solid white;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-left: 10px; /* Space from the arrow key layout */
-}
-
 /* Hide the game container initially */
 #game-container {
   display: none;

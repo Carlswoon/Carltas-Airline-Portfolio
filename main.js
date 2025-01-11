@@ -1,82 +1,9 @@
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-if (isMobile()) {
-  document.getElementById("touch-controls").style.display = "flex"; // Show touch controls
-} else {
-  document.getElementById("touch-controls").style.display = "none"; // Hide touch controls
-}
-
 const gameProgress = {
   region: 1, // Current airplane region
   totalRegions: 3, // Total regions
   secretsDiscovered: new Set(), // Set to track unique interactions
   totalSecrets: 15, // Total secrets
 };
-
-function generateMap(mapArray) {
-  const plane = document.querySelector(".grid");
-
-  // Clear the existing grid
-  plane.innerHTML = "";
-
-  // Iterate over the map array
-  for (let i = 0; i < mapArray.length; i++) {
-    for (let j = 0; j < mapArray[i].length; j++) {
-      const div = document.createElement("div");
-
-      // Determine the tile type based on the map value
-      switch (true) { // Use true to enable conditional checks in cases
-        case mapArray[i][j] === 1:
-          div.classList.add("wall");
-          break;
-        case mapArray[i][j] === 2:
-          div.classList.add("stewardess1");
-          break;
-        case mapArray[i][j] === 3:
-          div.classList.add("stewardess2");
-          break;
-        case mapArray[i][j] === 8:
-          div.classList.add("airplane_logo");
-          break;
-        case mapArray[i][j] === 9:
-          div.classList.add("upper_door", "cockpit-text");
-          div.textContent = "Cockpit";
-          break;
-        case mapArray[i][j] > 200 && mapArray[i][j] < 300: // Range condition
-          div.classList.add("seat");
-          break;
-        case mapArray[i][j] === -1:
-          div.classList.add("floor");
-          break;
-        case mapArray[i][j] < -100 && mapArray[i][j] > -200: // Range condition
-        div.classList.add("aisle");
-        const letter = calculateAisle(-mapArray[i][j]);
-        if (letter) {
-          div.textContent = letter;
-        }
-        break;
-        case mapArray[i][j] === -21:
-          div.classList.add("player");
-          break;
-          case mapArray[i][j] < 20 && mapArray[i][j] >= 10:
-          div.classList.add("lower_door");
-          break;
-        default:
-          div.classList.add("unknown"); // Handle unexpected values
-      }
-
-      // Append the div to the grid
-      plane.appendChild(div);
-    }
-  }
-
-  // Update the player reference in gameState
-  gameState.player = document.querySelector(".player");
-}
-
-
 
 const gameState = {
   map: [
@@ -99,6 +26,47 @@ const gameState = {
   idleTimeout: null, // Timer for inactivity
 };
 
+function generateMap(mapArray) {
+  const plane = document.querySelector(".grid");
+
+  plane.innerHTML = "";
+
+  // Iterate over the map array
+  for (let i = 0; i < mapArray.length; i++) {
+    for (let j = 0; j < mapArray[i].length; j++) {
+      const div = document.createElement("div");
+
+      if (mapArray[i][j] === 1) {
+        div.classList.add("wall");
+      } else if (mapArray[i][j] === 2) {
+        div.classList.add("stewardess1");
+      } else if (mapArray[i][j] === 3) {
+        div.classList.add("stewardess2");
+      } else if (mapArray[i][j] === 8) {
+        div.classList.add("airplane_logo");
+      } else if (mapArray[i][j] === 9) {
+        div.classList.add("upper_door", "cockpit-text");
+          div.textContent = "Cockpit";
+      } else if (mapArray[i][j] > 200 && mapArray[i][j] < 300) {
+        div.classList.add("seat");
+      } else if (mapArray[i][j] === -1) {
+        div.classList.add("floor");
+      } else if (mapArray[i][j] < -100 && mapArray[i][j] > -200) {
+        div.classList.add("aisle");
+        const letter = calculateAisle(-mapArray[i][j]);
+        if (letter) div.textContent = letter;
+      } else if (mapArray[i][j] === -21) {
+        div.classList.add("player");
+      } else if (mapArray[i][j] === mapArray[i][j] < 20 && mapArray[i][j] >= 10) {
+        div.classList.add("lower_door");
+      }
+      
+      plane.appendChild(div);
+    }
+  }
+  gameState.player = document.querySelector(".player");
+}
+
 generateMap(gameState.map);
 
 // Check if the player can move to the new position
@@ -118,28 +86,21 @@ function canMoveTo(newX, newY) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  const unlockSecretsButton = document.getElementById('unlock-secrets-button');
   const helpButton = document.getElementById('help-button');
   const titlePage = document.getElementById('title-page');
   const gameContainer = document.getElementById('game-container');
-  // State to track whether the game is active or on the home screen
   let isGameActive = false;
 
-  // Event listener for the Start Game button
   startButton.addEventListener('click', () => {
-    // Hide the title page
     titlePage.classList.add('hidden');
-    // Show the game container
     gameContainer.style.display = 'block';
-    // Activate the game state
     isGameActive = true;
   });
 
-  // Event listener for the Help ("?") button
   helpButton.addEventListener('click', () => {
     createModal({
       title: 'Help Me',
-      imageSrc: './assets/content/aisleA.jpg', // Replace with the path to your image
+      imageSrc: './assets/content/aisleA.jpg',
       facts: [
         'Name: Carlson',
         'Hobbies: Dancing, programming, and learning languages',
@@ -150,12 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Handle keydown for movement
   document.addEventListener('keydown', async (event) => {
-    // Ignore key inputs if the game is not active
     if (!isGameActive) return;
 
-    if (gameState.isMoving) return; // Prevent interrupting an ongoing animation
+    if (gameState.isMoving) return; 
     let newX = gameState.position.x;
     let newY = gameState.position.y;
 
@@ -180,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         handleInteraction();
         return;
       default:
-        return; // Ignore other keys
+        return;
     }
 
     if (canMoveTo(newX, newY)) {
@@ -196,13 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function movePlayer() {
   gameState.isMoving = true;
 
-  // Clear any existing idle timeout
   if (gameState.idleTimeout) {
     clearTimeout(gameState.idleTimeout);
     gameState.idleTimeout = null;
   }
 
-  // Set the animation based on direction
   switch (gameState.currentDirection) {
     case "up":
       gameState.player.style.backgroundPosition = "0px -512px"; // Row 9
@@ -260,19 +217,14 @@ function handleInteraction() {
   let targetY = gridY;
 
   // Determine the tile in front of the player based on direction
-  switch (gameState.currentDirection) {
-    case "up":
-      targetY -= 1;
-      break;
-    case "down":
-      targetY += 1;
-      break;
-    case "left":
-      targetX -= 1;
-      break;
-    case "right":
-      targetX += 1;
-      break;
+  if (gameState.currentDirection === "up") {
+    targetY -= 1;
+  } else if (gameState.currentDirection === "down") {
+    targetY += 1;
+  } else if (gameState.currentDirection === "left") {
+    targetX -= 1;
+  } else if (gameState.currentDirection === "right") {
+    targetX += 1;
   }
 
   // Ensure the target coordinates are within the grid bounds
@@ -583,24 +535,18 @@ function handleDialogInput(event) {
   let selectedIndex = gameState.dialog.selectedIndex || 0;
   const responses = gameState.dialog.responses;
 
-  switch (event.key) {
-    case "ArrowUp":
-      selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
-      updateDialogSelection(selectedIndex);
-      break;
-    case "ArrowDown":
-      selectedIndex = (selectedIndex + 1) % responses.length;
-      updateDialogSelection(selectedIndex);
-      break;
-    case "Enter":
-      const selectedResponse = responses[selectedIndex];
-      if (gameState.dialog.onResponse) {
-        gameState.dialog.onResponse(selectedResponse); // Trigger callback
-      }
-      if (!gameState.isDialogTransitioning) closeDialog(); // Only close if not transitioning
-      break;
-    default:
-      break;
+  if (event.key === "ArrowUp") {
+    selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
+    updateDialogSelection(selectedIndex);
+  } else if (event.key === "ArrowDown") {
+    selectedIndex = (selectedIndex + 1) % responses.length;
+    updateDialogSelection(selectedIndex);
+  } else if (event.key === "Enter") {
+    const selectedResponse = responses[selectedIndex];
+    if (gameState.dialog.onResponse) {
+      gameState.dialog.onResponse(selectedResponse); // Trigger callback
+    }
+    if (!gameState.isDialogTransitioning) closeDialog(); // Only close if not transitioning
   }
 
   gameState.dialog.selectedIndex = selectedIndex; // Update the selected index
@@ -736,8 +682,46 @@ function showPopup(title, message, imagePath = null) {
 
   // Add the pop-up to the body
   document.body.appendChild(popup);
-}
 
+  // Draggable functionality
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  popup.addEventListener('mousedown', (event) => {
+  isDragging = true;
+
+  popup.style.cursor = 'grabbing'; // Indicate dragging
+  popup.style.transition = 'none'; // Disable transition for smooth drag
+
+  // Calculate the offset between the popup's top-left corner and the mouse position
+  const rect = popup.getBoundingClientRect();
+  offsetX = event.clientX - rect.left;
+  offsetY = event.clientY - rect.top;
+  event.preventDefault(); // Prevent text selection while dragging
+});
+
+document.addEventListener('mousemove', (event) => {
+  if (isDragging) {
+    // Calculate new popup position based on mouse movement and offset
+    const x = event.clientX - offsetX;
+    const y = event.clientY - offsetY;
+
+    // Update the popup's position
+    popup.style.left = `${x}px`;
+    popup.style.top = `${y}px`;
+    popup.style.transform = 'none';
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    popup.style.cursor = ''; // Reset cursor
+    popup.style.transition = ''; // Re-enable transition after drag
+  }
+});
+}
 
 function calculateAisle(value) {
   const modulo = value % 100;
@@ -753,30 +737,6 @@ function updateGameInfo() {
   document.getElementById("secrets-info").textContent = `Secrets Discovered: ${gameProgress.secretsDiscovered.size}/${gameProgress.totalSecrets}`;
 }
 
-// Add touch controls
-const upBtn = document.getElementById("up-btn");
-const downBtn = document.getElementById("down-btn");
-const leftBtn = document.getElementById("left-btn");
-const rightBtn = document.getElementById("right-btn");
-const actionBtn = document.getElementById("action-btn");
-const enterBtn = document.getElementById("enter-btn");
-
-enterBtn.addEventListener("click", () => {
-  const event = new KeyboardEvent("keydown", { key: "Enter" });
-  document.dispatchEvent(event);
-});
-
-upBtn.addEventListener("click", () => triggerMovement("w"));
-downBtn.addEventListener("click", () => triggerMovement("s"));
-leftBtn.addEventListener("click", () => triggerMovement("a"));
-rightBtn.addEventListener("click", () => triggerMovement("d"));
-actionBtn.addEventListener("click", () => handleInteraction());
-
-// Function to simulate keypress events for movement
-function triggerMovement(key) {
-  const event = new KeyboardEvent("keydown", { key });
-  document.dispatchEvent(event);
-}
 
 function createModal({ title, imageSrc, facts }) {
   // Create the modal container
@@ -787,7 +747,7 @@ function createModal({ title, imageSrc, facts }) {
   // Modal content
   modal.innerHTML = `
     <div class="modal-content">
-      <button class="close-button">×</button>
+      <button class="close-button">x</button>
       <div class="modal-header">
         <div class="modal-pic">
           <img src="${imageSrc}" alt="Picture" />
@@ -878,6 +838,11 @@ destinationsGrid.addEventListener('click', (e) => {
         title: 'Korea',
         text: 'Kdrama!',
         image: './assets/flags/Korea.png',
+      },
+      Philippines: {
+        title: 'Philippines',
+        text: 'I\m filo lol',
+        image: './assets/flags/Philippines.png',
       },
     };
 
