@@ -1,30 +1,35 @@
-const gameProgress = {
-  region: 1, // Current airplane region
-  totalRegions: 3, // Total regions
-  secretsDiscovered: new Set(), // Set to track unique interactions
-  totalSecrets: 15, // Total secrets
-};
+import { showPopup } from './functions.js';
+import { setRandomHeight } from './titleScreen.js';
+import { calculateAisle } from './game.js';
 
-const gameState = {
-  map: [
-    [1, 1, 1, 1, 1, 1, 8, 1, 1],
-    [1, 9, 1, 1, 1, 1, 1, 1, 1],
-    [-21, -1, -1, -1, -1, 2, -1, -1, 3],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [201, 201, -101, 201, 201, 201, -101, 201, 201],
-    [202, 202, -102, 202, 202, 202, -102, 202, 202],
-    [203, 203, -103, 203, 203, 203, -103, 203, 203],
-    [204, 204, -104, 204, 204, 204, -104, 204, 204],
-    [0, 0, 0, 0, 0, 0, 11, 0, 0],
-  ],
-  gridSize: 64, // Size of each grid cell
-  position: { x: 0, y: 128 }, // Starting position
-  player: document.querySelector(".player"),
-  isMoving: false, // Track if animation is in progress
-  currentDirection: "down", // Default direction
-  moveDuration: 0.3, // Movement duration in seconds
-  idleTimeout: null, // Timer for inactivity
-};
+const game = {
+  state : {
+    map: [
+      [1, 1, 1, 1, 1, 1, 8, 1, 1],
+      [1, 9, 1, 1, 1, 1, 1, 1, 1],
+      [-21, -1, -1, -1, -1, 2, -1, -1, 3],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [201, 201, -101, 201, 201, 201, -101, 201, 201],
+      [202, 202, -102, 202, 202, 202, -102, 202, 202],
+      [203, 203, -103, 203, 203, 203, -103, 203, 203],
+      [204, 204, -104, 204, 204, 204, -104, 204, 204],
+      [0, 0, 0, 0, 0, 0, 11, 0, 0],
+    ],
+    gridSize: 64, // Size of each grid cell
+    position: { x: 0, y: 128 }, // Starting position
+    player: document.querySelector(".player"),
+    isMoving: false, // Track if animation is in progress
+    currentDirection: "down", // Default direction
+    moveDuration: 0.3, // Movement duration in seconds
+    idleTimeout: null, // Timer for inactivity
+  }, 
+  progress: {
+    region: 1, // Current airplane region
+    totalRegions: 3, // Total regions
+    secretsDiscovered: new Set(), // Set to track unique interactions
+    totalSecrets: 15, // Total secrets
+  }
+}
 
 function generateMap(mapArray) {
   const plane = document.querySelector(".grid");
@@ -42,6 +47,8 @@ function generateMap(mapArray) {
         div.classList.add("stewardess1");
       } else if (mapArray[i][j] === 3) {
         div.classList.add("stewardess2");
+      } else if (mapArray[i][j] === 4) {
+        div.classList.add("pilot");
       } else if (mapArray[i][j] === 8) {
         div.classList.add("airplane_logo");
       } else if (mapArray[i][j] === 9) {
@@ -57,30 +64,30 @@ function generateMap(mapArray) {
         if (letter) div.textContent = letter;
       } else if (mapArray[i][j] === -21) {
         div.classList.add("player");
-      } else if (mapArray[i][j] === mapArray[i][j] < 20 && mapArray[i][j] >= 10) {
+      } else if (mapArray[i][j] < 20 && mapArray[i][j] >= 10) {
         div.classList.add("lower_door");
       }
       
       plane.appendChild(div);
     }
   }
-  gameState.player = document.querySelector(".player");
+  game.state.player = document.querySelector(".player");
 }
 
-generateMap(gameState.map);
+generateMap(game.state.map);
 
 // Check if the player can move to the new position
 function canMoveTo(newX, newY) {
-  const gridX = newX / gameState.gridSize;
-  const gridY = newY / gameState.gridSize;
+  const gridX = newX / game.state.gridSize;
+  const gridY = newY / game.state.gridSize;
 
   // Ensure the coordinates are within the grid and the tile is walkable
   return (
     gridX >= 0 &&
     gridY >= 0 &&
-    gridY < gameState.map.length &&
-    gridX < gameState.map[0].length &&
-    gameState.map[gridY][gridX] < 0
+    gridY < game.state.map.length &&
+    gridX < game.state.map[0].length &&
+    game.state.map[gridY][gridX] < 0
   );
 }
 
@@ -114,26 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', async (event) => {
     if (!isGameActive) return;
 
-    if (gameState.isMoving) return; 
-    let newX = gameState.position.x;
-    let newY = gameState.position.y;
+    if (game.state.isMoving) return; 
+    let newX = game.state.position.x;
+    let newY = game.state.position.y;
 
     switch (event.key.toLowerCase()) {
       case "w": // Move up
-        newY -= gameState.gridSize;
-        gameState.currentDirection = "up";
+        newY -= game.state.gridSize;
+        game.state.currentDirection = "up";
         break;
       case "a": // Move left
-        newX -= gameState.gridSize;
-        gameState.currentDirection = "left";
+        newX -= game.state.gridSize;
+        game.state.currentDirection = "left";
         break;
       case "s": // Move down
-        newY += gameState.gridSize;
-        gameState.currentDirection = "down";
+        newY += game.state.gridSize;
+        game.state.currentDirection = "down";
         break;
       case "d": // Move right
-        newX += gameState.gridSize;
-        gameState.currentDirection = "right";
+        newX += game.state.gridSize;
+        game.state.currentDirection = "right";
         break;
       case "e":
         handleInteraction();
@@ -143,56 +150,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (canMoveTo(newX, newY)) {
-      gameState.position.x = newX;
-      gameState.position.y = newY;
+      game.state.position.x = newX;
+      game.state.position.y = newY;
       movePlayer();
     } else {
-      setIdleAnimation(gameState.currentDirection);
+      setIdleAnimation(game.state.currentDirection);
     }
   });
 });
 
 function movePlayer() {
-  gameState.isMoving = true;
+  game.state.isMoving = true;
 
-  if (gameState.idleTimeout) {
-    clearTimeout(gameState.idleTimeout);
-    gameState.idleTimeout = null;
+  if (game.state.idleTimeout) {
+    clearTimeout(game.state.idleTimeout);
+    game.state.idleTimeout = null;
   }
 
-  switch (gameState.currentDirection) {
+  switch (game.state.currentDirection) {
     case "up":
-      gameState.player.style.backgroundPosition = "0px -512px"; // Row 9
-      gameState.player.style.animation = "moveUp 0.3s steps(9) infinite";
+      game.state.player.style.backgroundPosition = "0px -512px"; // Row 9
+      game.state.player.style.animation = "moveUp 0.3s steps(9) infinite";
       break;
     case "left":
-      gameState.player.style.backgroundPosition = "0px -576px"; // Row 10
-      gameState.player.style.animation = "moveLeft 0.3s steps(9) infinite";
+      game.state.player.style.backgroundPosition = "0px -576px"; // Row 10
+      game.state.player.style.animation = "moveLeft 0.3s steps(9) infinite";
       break;
     case "down":
-      gameState.player.style.backgroundPosition = "0px -640px"; // Row 11
-      gameState.player.style.animation = "moveDown 0.3s steps(9) infinite";
+      game.state.player.style.backgroundPosition = "0px -640px"; // Row 11
+      game.state.player.style.animation = "moveDown 0.3s steps(9) infinite";
       break;
     case "right":
-      gameState.player.style.backgroundPosition = "0px -704px"; // Row 12
-      gameState.player.style.animation = "moveRight 0.3s steps(9) infinite";
+      game.state.player.style.backgroundPosition = "0px -704px"; // Row 12
+      game.state.player.style.animation = "moveRight 0.3s steps(9) infinite";
       break;
   }
 
   // Move the player smoothly to the new position
-  gameState.player.style.transition = `transform ${gameState.moveDuration}s linear`;
-  gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+  game.state.player.style.transition = `transform ${game.state.moveDuration}s linear`;
+  game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
 
 
   // Stop animation and return to idle after movement
   setTimeout(() => {
-    gameState.isMoving = false;
+    game.state.isMoving = false;
 
-    gameState.idleTimeout = setTimeout(() => {
+    game.state.idleTimeout = setTimeout(() => {
       // Set the idle animation and direction based on the last input
-      setIdleAnimation(gameState.currentDirection);
+      setIdleAnimation(game.state.currentDirection);
     }, 50); // Trigger idle after 50ms of inactivity
-  }, gameState.moveDuration * 750);
+  }, game.state.moveDuration * 750);
 }
 
 
@@ -205,25 +212,25 @@ function setIdleAnimation(direction) {
   };
 
   if (idleAnimations[direction]) {
-    gameState.player.style.animation = idleAnimations[direction];
+    game.state.player.style.animation = idleAnimations[direction];
   }
 }
 
 function handleInteraction() {
-  const gridX = gameState.position.x / gameState.gridSize;
-  const gridY = gameState.position.y / gameState.gridSize;
+  const gridX = game.state.position.x / game.state.gridSize;
+  const gridY = game.state.position.y / game.state.gridSize;
 
   let targetX = gridX;
   let targetY = gridY;
 
   // Determine the tile in front of the player based on direction
-  if (gameState.currentDirection === "up") {
+  if (game.state.currentDirection === "up") {
     targetY -= 1;
-  } else if (gameState.currentDirection === "down") {
+  } else if (game.state.currentDirection === "down") {
     targetY += 1;
-  } else if (gameState.currentDirection === "left") {
+  } else if (game.state.currentDirection === "left") {
     targetX -= 1;
-  } else if (gameState.currentDirection === "right") {
+  } else if (game.state.currentDirection === "right") {
     targetX += 1;
   }
 
@@ -231,10 +238,10 @@ function handleInteraction() {
   if (
     targetX >= 0 &&
     targetY >= 0 &&
-    targetY < gameState.map.length &&
-    targetX < gameState.map[0].length
+    targetY < game.state.map.length &&
+    targetX < game.state.map[0].length
   ) {
-    const targetTile = gameState.map[targetY][targetX];
+    const targetTile = game.state.map[targetY][targetX];
 
     const dialogBox = document.getElementById("dialog-box");
     const dialogName = document.getElementById("dialog-name");
@@ -246,15 +253,15 @@ function handleInteraction() {
       showDialog(dialogBox, ["I need a tutorial please", "I am all goodies :)"], (response) => {
         if (response === "I need a tutorial please") {
           dialogText.textContent = "You can use W, A, S, D keys to move around. Use E key the interact with npc and the secrets hidden in this plane. Do you have anymore questions?";
-          gameState.isDialogTransitioning = true;
+          game.state.isDialogTransitioning = true;
             showDialog(dialogBox, ["No"], (response) => {
-              gameState.isDialogTransitioning = false;
+              game.state.isDialogTransitioning = false;
             });
         } else if (response === "I am all goodies :)") {
           dialogText.textContent = "Alright, let me know if you change your mind.";
-          gameState.isDialogTransitioning = true;
+          game.state.isDialogTransitioning = true;
           showDialog(dialogBox, ["Continue"], (response) => {
-            gameState.isDialogTransitioning = false;
+            game.state.isDialogTransitioning = false;
           });
         }
       });
@@ -264,92 +271,92 @@ function handleInteraction() {
       showDialog(dialogBox, ["我需要一个教程，请", "我没事"], (response) => {
         if (response === "我需要一个教程，请") {
           dialogText.textContent = "你可以使用 W、A、S、D 键来移动。使用 E 键与 NPC 互动，并探索这个平面中隐藏的秘密。你还有其他问题吗？";
-          gameState.isDialogTransitioning = true;
+          game.state.isDialogTransitioning = true;
             showDialog(dialogBox, ["不"], (response) => {
-              gameState.isDialogTransitioning = false;
+              game.state.isDialogTransitioning = false;
             });
         } else if (response === "我没事") {
           dialogText.textContent = "好的，如果你改变主意，请告诉我。";
-          gameState.isDialogTransitioning = true;
+          game.state.isDialogTransitioning = true;
           showDialog(dialogBox, ["好的"], (response) => {
-            gameState.isDialogTransitioning = false;
+            game.state.isDialogTransitioning = false;
           });
         }
       });
     } else if (targetTile === 201) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle A - About Me', 'Hi my name is Carlson and am a second year studying computer science at UNSW.', './assets/content/aisleA.jpg');
     } else if (targetTile === 202) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle B - Beliefs', 'I strongly believe that everyone\'s purpose is to help each other grow', './assets/content/aisleB.avif');
     } else if (targetTile === 203) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle C - Characteristics', 'Considerate, Dilligent, Easygoing, Funny, Honest', './assets/content/aisleC.png');
     } else if (targetTile === 204) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle D - Dreams', 'I want to create a language learning app (better than duolingo) that will actually help people learn languages and become fluent in them.', './assets/content/aisleD.jpg');
     } else if (targetTile === 205) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle E - Energy Sources', 'Chocolate, Kpop (good music in general), MEMES', './assets/content/aisleE.gif');
     } else if (targetTile === 206) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle F - Fears', 'I am afraid of bugs. Both in real life and in coding. Why do they have such weird looking legs TwT', './assets/content/aisleF.JPG');
     } else if (targetTile === 207) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle G - Gratitude', 'Grateful to my older brother to telling me to watch Harvard\'s CS50 before I was about to choose chemical engineering to study at UNSW', './assets/content/aisleG.avif');
     } else if (targetTile === 208) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle H - Hobbies', 'Language learning. I am currently learning Chinese (doing ARTS2450 and ARTS2451 this year!) and Korean. Would like to become a polyglot. Also like dancing.', './assets/content/aisleH.jpg');
     } else if (targetTile === 209) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle I - Incredible Puns', 'If I don\'t get arrays from my boss I will error 404', './assets/content/aisleI.jpg');
     } else if (targetTile === 210) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle J - Joke Time', '01101100 01100101 01110100 00100000 01101000 01101001 01101101 00100000 01100011 01101111 01101111 01101011', './assets/content/aisleJ.png');
     } else if (targetTile === 211) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle K - Kidding Time part 2', 'Yo computer science teaching mama so fat, she can flatten a binary tree in O(1). (this is not targeted at your mum)', './assets/content/aisleK.png');
     } else if (targetTile === 212) {
-      if (!gameProgress.secretsDiscovered.has(targetTile)) {
-        gameProgress.secretsDiscovered.add(targetTile);
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
         updateGameInfo(); // Update the display
       }
       showPopup('Aisle L - Laugh with me Part 3', 'I once went to a fortune teller for him that for the next 20 years I will be poor and lonely. Jokes on him. I had no money to pay him :p', './assets/content/aisleL.jpg');
     } else if (targetTile === 11) {
-      gameProgress.region = 2; // Example: Change to region 2
+      game.progress.region = 2; // Example: Change to region 2
       updateGameInfo();
       const overlay = document.getElementById("transition-overlay");
       const textElement = document.getElementById("transition-text");
@@ -376,26 +383,43 @@ function handleInteraction() {
             [0, 0, 0, 0, 0, 0, 12, 0, 0],
           ],
           gridSize: 64, // Size of each grid cell
-          position: { x: 384, y: 128 }, // Starting position
           player: null, // Will be updated after generating the map
           isMoving: false, // Track if animation is in progress
           currentDirection: "down", // Default direction
           moveDuration: 0.3, // Movement duration in seconds
           idleTimeout: null, // Timer for inactivity
         };
+        
+        if (game.state.currentDirection === "down") {
+          game.state.position = { x: 384, y: 128 };
+            // Generate the new map
+          generateMap(gameState2.map);
+      
+          // Update the global game.state
+          Object.assign(game.state, gameState2);
+      
+          // Update the player reference
+          game.state.player = document.querySelector(".player");
+      
+          // Update the player's position
+          game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
+            
+        } else {
+          game.state.position = { x: 384, y: 448 };
+          // Generate the new map
+          generateMap(gameState2.map);
     
-        // Generate the new map
-        generateMap(gameState2.map);
+          // Update the global game.state
+          Object.assign(game.state, gameState2);
     
-        // Update the global gameState
-        Object.assign(gameState, gameState2);
+          // Update the player reference
+          game.state.player = document.querySelector(".player");
     
-        // Update the player reference
-        gameState.player = document.querySelector(".player");
-    
-        // Update the player's position
-        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
-    
+          // Update the player's position
+          game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
+          setIdleAnimation("up");
+        }
+        
         // Start fade-out animation after loading the map
         setTimeout(() => {
           overlay.classList.remove("fade-in");
@@ -408,7 +432,7 @@ function handleInteraction() {
         }, 1000); // Short delay to ensure the map is fully loaded
       }, 800); // Match the duration of the fade-in animation
     } else if (targetTile === 12) {
-      gameProgress.region = 3; // Example: Change to region 2
+      game.progress.region = 3; // Example: Change to region 2
       updateGameInfo();
       const overlay = document.getElementById("transition-overlay");
       const textElement = document.getElementById("transition-text");
@@ -446,14 +470,14 @@ function handleInteraction() {
         // Generate the new map
         generateMap(gameState2.map);
     
-        // Update the global gameState
-        Object.assign(gameState, gameState2);
+        // Update the global game.state
+        Object.assign(game.state, gameState2);
     
         // Update the player reference
-        gameState.player = document.querySelector(".player");
+        game.state.player = document.querySelector(".player");
     
         // Update the player's position
-        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+        game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
     
         // Start fade-out animation after loading the map
         setTimeout(() => {
@@ -467,7 +491,7 @@ function handleInteraction() {
         }, 1000); // Short delay to ensure the map is fully loaded
       }, 800); // Match the duration of the fade-in animation
     } else if (targetTile === 10) {
-      gameProgress.region = 1; // Example: Change to region 2
+      game.progress.region = 1; // Example: Change to region 2
       updateGameInfo();
       const overlay = document.getElementById("transition-overlay");
       const textElement = document.getElementById("transition-text");
@@ -505,14 +529,14 @@ function handleInteraction() {
         // Generate the new map
         generateMap(gameState2.map);
     
-        // Update the global gameState
-        Object.assign(gameState, gameState2);
+        // Update the global game.state
+        Object.assign(game.state, gameState2);
     
         // Update the player reference
-        gameState.player = document.querySelector(".player");
+        game.state.player = document.querySelector(".player");
     
         // Update the player's position
-        gameState.player.style.transform = `translate(${gameState.position.x}px, ${gameState.position.y}px) translateY(-260%) scale(1.5)`;
+        game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
         setIdleAnimation("up");
         // Start fade-out animation after loading the map
         setTimeout(() => {
@@ -525,6 +549,81 @@ function handleInteraction() {
           }, 800); // Match the duration of the fade-out transition
         }, 1000); // Short delay to ensure the map is fully loaded
       }, 800); // Match the duration of the fade-in animation
+    } else if (targetTile === 9) {
+      if (!(game.progress.secretsDiscovered.size >= 12)) {
+        showPopup("locked", "come back when you have discovered at least 12 secrets");
+      } else {
+        game.progress.region = 0;
+        updateGameInfo();
+        const overlay = document.getElementById("transition-overlay");
+        const textElement = document.getElementById("transition-text");
+    
+        // Set the transition message
+        textElement.textContent = "Entering the cockpit...";
+        
+        // Start fade-in animation
+        overlay.classList.add("fade-in");
+      
+        // Wait for fade-in animation to complete
+        setTimeout(() => {
+          // Define the new game state
+          const gameState2 = {
+            map: [
+              [1, 1, 1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1, 1, 1],
+              [-21, -1, -1, -1, -1, -1, -1, -1, -1],
+              [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+              [-1, -1, -1, -1, -1, -1, -1, -1, 4],
+              [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+              [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+              [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+              [0, 10, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            gridSize: 64, // Size of each grid cell
+            position: { x: 64, y: 448 }, // Starting position
+            player: null, // Will be updated after generating the map
+            isMoving: false, // Track if animation is in progress
+            currentDirection: "up", // Default direction
+            moveDuration: 0.3, // Movement duration in seconds
+            idleTimeout: null, // Timer for inactivity
+          };
+      
+          // Generate the new map
+          generateMap(gameState2.map);
+      
+          // Update the global game.state
+          Object.assign(game.state, gameState2);
+      
+          // Update the player reference
+          game.state.player = document.querySelector(".player");
+      
+          // Update the player's position
+          game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
+          setIdleAnimation("up");
+          // Start fade-out animation after loading the map
+          setTimeout(() => {
+            overlay.classList.remove("fade-in");
+            overlay.classList.add("fade-out");
+      
+            // Remove fade-out class after animation completes
+            setTimeout(() => {
+              overlay.classList.remove("fade-out");
+            }, 800); // Match the duration of the fade-out transition
+          }, 1000); // Short delay to ensure the map is fully loaded
+        }, 800); // Match the duration of the fade-in animation
+      }
+    } if (targetTile === 4) {
+      dialogName.textContent = "Pilot Carlson";
+      dialogText.textContent = "ah you have finally found me! Now that you know all about me I guess I really don't have anything else to say...";
+      showDialog(dialogBox, ["Continue"], (response) => {
+        if (response === "Continue") {
+          dialogText.textContent = "BUT! If you have anymore questions, here is my email address which you can contact me at: carlson280306@gmail.com";
+          game.state.isDialogTransitioning = true;
+            showDialog(dialogBox, ["Ok thanks "], (response) => {
+              game.state.isDialogTransitioning = false;
+            });
+        }
+      });
     }
   }
 }
@@ -532,8 +631,8 @@ function handleInteraction() {
 document.addEventListener("keydown", handleDialogInput);
 function handleDialogInput(event) {
   
-  let selectedIndex = gameState.dialog.selectedIndex || 0;
-  const responses = gameState.dialog.responses;
+  let selectedIndex = game.state.dialog.selectedIndex || 0;
+  const responses = game.state.dialog.responses;
 
   if (event.key === "ArrowUp") {
     selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
@@ -543,13 +642,13 @@ function handleDialogInput(event) {
     updateDialogSelection(selectedIndex);
   } else if (event.key === "Enter") {
     const selectedResponse = responses[selectedIndex];
-    if (gameState.dialog.onResponse) {
-      gameState.dialog.onResponse(selectedResponse); // Trigger callback
+    if (game.state.dialog.onResponse) {
+      game.state.dialog.onResponse(selectedResponse); // Trigger callback
     }
-    if (!gameState.isDialogTransitioning) closeDialog(); // Only close if not transitioning
+    if (!game.state.isDialogTransitioning) closeDialog(); // Only close if not transitioning
   }
 
-  gameState.dialog.selectedIndex = selectedIndex; // Update the selected index
+  game.state.dialog.selectedIndex = selectedIndex; // Update the selected index
 }
 
 function updateDialogSelection(selectedIndex) {
@@ -558,10 +657,10 @@ function updateDialogSelection(selectedIndex) {
 
   responseList.forEach((item, index) => {
     if (index === selectedIndex) {
-      item.textContent = `> ${gameState.dialog.responses[index]}`; // Add arrow to selected
+      item.textContent = `> ${game.state.dialog.responses[index]}`; // Add arrow to selected
       item.classList.add("selected");
     } else {
-      item.textContent = `  ${gameState.dialog.responses[index]}`; // Remove arrow from others
+      item.textContent = `  ${game.state.dialog.responses[index]}`; // Remove arrow from others
       item.classList.remove("selected");
     }
   });
@@ -569,8 +668,8 @@ function updateDialogSelection(selectedIndex) {
 
 function showDialog(dialogBox, responses = [], onResponse = null) {
   // Mark dialog as open
-  gameState.isDialogOpen = true;
-  gameState.dialog = { responses, onResponse, selectedIndex: 0 };
+  game.state.isDialogOpen = true;
+  game.state.dialog = { responses, onResponse, selectedIndex: 0 };
 
   // Remove hidden class to display the dialog
   dialogBox.classList.remove("hidden");
@@ -600,8 +699,8 @@ function showDialog(dialogBox, responses = [], onResponse = null) {
 function closeDialog() {
   const dialogBox = document.getElementById("dialog-box");
   dialogBox.classList.add("hidden");
-  gameState.isDialogOpen = false;
-  gameState.dialog = null;
+  game.state.isDialogOpen = false;
+  game.state.dialog = null;
 }
 
 
@@ -632,109 +731,10 @@ function scaleGame() {
 window.addEventListener("load", scaleGame);
 window.addEventListener("resize", scaleGame);
 
-function showPopup(title, message, imagePath = null) {
-  // Create the pop-up container
-  const popup = document.createElement('div');
-  popup.id = 'popup-box';
-
-  // Create the title
-  const popupTitle = document.createElement('div');
-  popupTitle.classList.add('popup-title');
-  popupTitle.textContent = title;
-  popup.appendChild(popupTitle);
-
-  // Create the content section
-  const popupContent = document.createElement('div');
-  popupContent.classList.add('popup-content');
-
-  // Create the text section
-  const popupText = document.createElement('div');
-  popupText.classList.add('popup-text');
-  popupText.textContent = message;
-  popupContent.appendChild(popupText);
-
-  // Create the image box or image element
-  const popupImage = document.createElement('div');
-  popupImage.classList.add('popup-image');
-
-  if (imagePath) {
-    const img = document.createElement('img');
-    img.src = imagePath;
-    img.alt = 'Image';
-    popupImage.appendChild(img);
-  } else {
-    popupImage.textContent = 'PIC'; // Default placeholder if no image provided
-  }
-
-  popupContent.appendChild(popupImage);
-
-  // Add the content section to the popup
-  popup.appendChild(popupContent);
-
-  // Create the X button
-  const closeButton = document.createElement('div');
-  closeButton.classList.add('popup-close');
-  closeButton.textContent = 'X';
-  closeButton.onclick = () => {
-    document.body.removeChild(popup);
-  };
-  popup.appendChild(closeButton);
-
-  // Add the pop-up to the body
-  document.body.appendChild(popup);
-
-  // Draggable functionality
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  popup.addEventListener('mousedown', (event) => {
-  isDragging = true;
-
-  popup.style.cursor = 'grabbing'; // Indicate dragging
-  popup.style.transition = 'none'; // Disable transition for smooth drag
-
-  // Calculate the offset between the popup's top-left corner and the mouse position
-  const rect = popup.getBoundingClientRect();
-  offsetX = event.clientX - rect.left;
-  offsetY = event.clientY - rect.top;
-  event.preventDefault(); // Prevent text selection while dragging
-});
-
-document.addEventListener('mousemove', (event) => {
-  if (isDragging) {
-    // Calculate new popup position based on mouse movement and offset
-    const x = event.clientX - offsetX;
-    const y = event.clientY - offsetY;
-
-    // Update the popup's position
-    popup.style.left = `${x}px`;
-    popup.style.top = `${y}px`;
-    popup.style.transform = 'none';
-  }
-});
-
-document.addEventListener('mouseup', () => {
-  if (isDragging) {
-    isDragging = false;
-    popup.style.cursor = ''; // Reset cursor
-    popup.style.transition = ''; // Re-enable transition after drag
-  }
-});
-}
-
-function calculateAisle(value) {
-  const modulo = value % 100;
-  if (modulo >= 1 && modulo <= 26) {
-    return String.fromCharCode(64 + modulo); // ASCII: A=65, B=66, ...
-  }
-  return ""; 
-}
-
 
 function updateGameInfo() {
-  document.getElementById("region-info").textContent = `Airplane Region: ${gameProgress.region}/${gameProgress.totalRegions}`;
-  document.getElementById("secrets-info").textContent = `Secrets Discovered: ${gameProgress.secretsDiscovered.size}/${gameProgress.totalSecrets}`;
+  document.getElementById("region-info").textContent = `Airplane Region: ${game.progress.region}/${game.progress.totalRegions}`;
+  document.getElementById("secrets-info").textContent = `Secrets Discovered: ${game.progress.secretsDiscovered.size}/${game.progress.totalSecrets}`;
 }
 
 
@@ -782,20 +782,8 @@ function createModal({ title, imageSrc, facts }) {
   // Show the modal by removing the "hidden" class
   modal.classList.remove('hidden');
 }
-
-const plane = document.getElementById('traveling-plane');
-
-// Function to set a random height
-function setRandomHeight() {
-  const randomTop = Math.floor(Math.random() * 80); // Random value between 0 and 80 (percentage of the viewport height)
-  plane.style.top = `${randomTop}vh`; // Set the top position in viewport height units
-}
-
 // Set initial random height
 setRandomHeight();
-
-// Add an event listener to restart the height at the end of each animation cycle
-plane.addEventListener('animationiteration', setRandomHeight);
 
 
 const destinationsGrid = document.getElementById('destinations-grid');
@@ -841,7 +829,7 @@ destinationsGrid.addEventListener('click', (e) => {
       },
       Philippines: {
         title: 'Philippines',
-        text: 'I\m filo lol',
+        text: 'I\'m filo lol',
         image: './assets/flags/Philippines.png',
       },
     };
