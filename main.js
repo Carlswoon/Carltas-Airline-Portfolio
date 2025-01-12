@@ -31,6 +31,10 @@ const game = {
   }
 };
 
+function isMobile() {
+  return /Mobi|Android|iPad|iPhone/i.test(navigator.userAgent);
+}
+
 function titleScreenMessage() {
   const dialogBox = document.getElementById('dialog-box');
   const dialogName = document.getElementById('dialog-name');
@@ -209,9 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('keydown', async(event) => {
-    if (!isGameActive) {return;}
+    if (!isGameActive) return;
+    if (game.state.isMoving) return;
 
-    if (game.state.isMoving) {return;}
     let newX = game.state.position.x;
     let newY = game.state.position.y;
 
@@ -243,6 +247,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+document.addEventListener('touchstart', (event) => {
+  const touch = event.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+});
+
+document.addEventListener('touchend', (event) => {
+  touchEndX = event.changedTouches[0].clientX;
+  touchEndY = event.changedTouches[0].clientY;
+
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (deltaX > 30) {
+      triggerKey('d');
+    } else if (deltaX < -30) {
+      triggerKey('a');
+    }
+  } else {
+    if (deltaY > 30) {
+      triggerKey('s');
+    } else if (deltaY < -30) {
+      triggerKey('w');
+    }
+  }
+}
+
+function triggerKey(key) {
+  const event = new KeyboardEvent('keydown', { key });
+  document.dispatchEvent(event);
+}
 
 function movePlayer() {
   game.state.isMoving = true;
@@ -537,8 +583,6 @@ function handleDialogInput(event) {
   let selectedIndex = game.state.dialog.selectedIndex || 0;
   const responses = game.state.dialog.responses;
 
-
-
   if (event.key === 'ArrowUp') {
     selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
     updateDialogSelection(selectedIndex);
@@ -591,10 +635,34 @@ function showDialog(dialogBox, responses = [], onResponse = null) {
 
   responses.forEach((response, index) => {
     const listItem = document.createElement('li');
-    listItem.textContent = `${index === 0 ? '> ' : '  '} ${response}`;
-    listItem.className = index === 0 ? 'selected' : '';
+    if (!isMobile()) {
+      listItem.textContent = `${index === 0 ? '> ' : '  '} ${response}`;
+      listItem.className = index === 0 ? 'selected' : '';
+    } else {
+      listItem.textContent = response;
+    }
+    listItem.addEventListener('click', () => {
+      selectResponse(index);
+    });
+
+    listItem.addEventListener('mouseenter', () => {
+      updateDialogSelection(index);
+    });
     responseList.appendChild(listItem);
   });
+}
+
+function selectResponse(selectedIndex) {
+  const responses = game.state.dialog.responses;
+  const selectedResponse = responses[selectedIndex];
+  if (game.state.dialog.onResponse) {
+    game.state.dialog.onResponse(selectedResponse);
+  }
+  if (game.state.isDialogTransitioning) {
+    game.state.dialog.selectedIndex = 0;
+  } else {
+    closeDialog();
+  }
 }
 
 function closeDialog() {
@@ -610,6 +678,22 @@ function scaleGame() {
 
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
+
+  if ((screenWidth <= 600 || screenHeight <= 600)) {
+    plane.style.top = '50%';
+    plane.style.left = '50%';
+    plane.style.position = 'absolute';
+    plane.style.transform = 'translate(-50%, -50%) scale(0.6)';
+    plane.style.transformOrigin = 'center';
+    return;
+  } else if (screenWidth <= 800 || screenHeight <= 800) {
+    plane.style.top = '50%';
+    plane.style.left = '50%';
+    plane.style.position = 'absolute';
+    plane.style.transform = 'translate(-50%, -50%) scale(0.8)';
+    plane.style.transformOrigin = 'center';
+    return;
+  }
 
   const planeWidth = plane.offsetWidth;
   const planeHeight = plane.offsetHeight;
