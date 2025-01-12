@@ -35,6 +35,29 @@ function isMobile() {
   return /Mobi|Android|iPad|iPhone/i.test(navigator.userAgent);
 }
 
+function enableMobileTileInteraction() {
+  const gameContainer = document.getElementById('game-container'); // Adjust to your container ID
+
+  gameContainer.addEventListener('click', (event) => {
+    const gridSize = game.state.gridSize;
+
+    const rect = gameContainer.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    const targetX = Math.floor(clickX / gridSize);
+    const targetY = Math.floor(clickY / gridSize);
+
+
+    handleInteraction(targetX, targetY);
+  });
+}
+
+// Enable mobile-specific interaction
+if (isMobile()) {
+  enableMobileTileInteraction();
+}
+
 function titleScreenMessage() {
   const dialogBox = document.getElementById('dialog-box');
   const dialogName = document.getElementById('dialog-name');
