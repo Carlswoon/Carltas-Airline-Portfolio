@@ -151,7 +151,10 @@ function titleScreenMessage() {
   }
 }
 
-titleScreenMessage();
+window.addEventListener('load', () => {
+  titleScreenMessage();
+});
+
 
 function generateMap(mapArray) {
   const plane = document.querySelector('.grid');
@@ -197,7 +200,10 @@ function generateMap(mapArray) {
   game.state.player = document.querySelector('.player');
 }
 
-generateMap(game.state.map);
+window.addEventListener('load', () => {
+  generateMap(game.state.map);
+});
+
 
 function canMoveTo(newX, newY) {
   const gridX = newX / game.state.gridSize;
