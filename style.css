@@ -1,26 +1,28 @@
 @font-face {
-  font-family: 'Zpix';
-  src: url('./assets/fonts/zpix.ttf') format('truetype'); /* Adjust the path if necessary */
+  font-family: Zpix;
+  src: url('./assets/fonts/zpix.ttf') format('truetype');
 }
 
 .zpix-font {
-  font-family: 'Zpix', sans-serif;
+  font-family: Zpix, sans-serif;
 }
 
-/* General Styling */
+html {
+  overflow: hidden
+}
+
 body {
   font-family: 'Press Start 2P', 'Nanum Gothic', sans-serif;
   background-image: url('./assets/setting/clouds.png');
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
+  height: 100vh;
+  width: 100vw;
   margin: 0;
-  overflow: hidden; /* Prevent scrollbars */
-  background-size: cover; /* Ensures the background fills the viewport */
-  background-repeat: no-repeat; /* Prevents the background from repeating */
-  background-position: center; /* Centers the background */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
 }
 
 #cockpit_door,
@@ -35,21 +37,22 @@ body {
   background-color: transparent;
   width: fit-content;
   margin: auto;
+  
 }
 
 .wall {
-  background-color: #5d5d5d; /* Dark gray color for the wall */
-  width: 100%; /* Full width */
-  height: 64px; /* Standard height to match grid size */
+  background-color: #5d5d5d;
+  width: 100%;
+  height: 64px;
   
 }
 
 .wall-bottom {
-  border-bottom: 2px solid rgb(41, 41, 41); /* Adjust thickness and color as needed */
+  border-bottom: 2px solid rgb(41 41 41);
 }
 
 #game-container {
-  display: flex;
+  display: hidden;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -57,35 +60,44 @@ body {
   width: 100vw;
 }
 
-/* Plane Interior */
+
 #plane {
   display: grid;
   grid-template-rows: repeat(8, 64px); 
   grid-template-columns: repeat(9, 64px); 
-  background-color: #4A4A4A; /* Plane floor color */
-  border: 10px solid #333; /* Border around the plane */
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Adds a shadow effect */
-  transform: scale(1.5); /* Scale to 150% */
-  transform-origin: center; /* Keep scaling centered */
+  background-color: #4A4A4A;
+  border: 10px solid #333;
+  box-shadow: 2px 2px 10px rgb(0 0 0 / 50%);
+  transform: scale(1.5);
+  transform-origin: center;
 }
 
 #plane-container {
   margin-top: 25vh;
-  flex: 1; /* Use remaining space */
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Seat Styling */
 .seat {
-  background-image: url('./assets/setting/airplane chair.png'); /* Replace with your chair asset */
+  background-image: url('./assets/setting/airplane chair.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   width: 64px;
   height: 64px;
-  image-rendering: pixelated; /* Keeps the sprite sharp */
+  image-rendering: pixelated;
+}
+
+.seat2 {
+  background-image: url('./assets/setting/airplane chair 2.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
 }
 
 
@@ -96,13 +108,13 @@ body {
 }
 
 .cockpit-text {
-  font-family: "Press Start 2P", serif; /* Pixel-style font */
+  font-family: "Press Start 2P", serif;
   font-size: 9.2px;
   font-weight: bold;
-  color: #ffffff; /* Text color */
+  color: #fff;
   z-index: 11;
   height: 15px;
-  background-color: rgb(227, 1, 1);
+  background-color: rgb(227 1 1);
 }
 
 
@@ -144,146 +156,150 @@ body {
 }
 
 .stewardess1 {
-  width: 64px; /* Width of a single frame */
-  height: 64px; /* Height of a single frame */
-  background-image: url('./assets/characters/stewardess.png'); /* Path to sprite sheet */
-  background-size: auto; /* Size of the entire sprite sheet */
-  background-size: auto; /* Ensure proper scaling */
-  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  width: 64px;
+  height: 64px;
+  background-image: url('./assets/characters/stewardess.png');
+  background-size: auto;
+  animation: idleAnimationDown 1s steps(2) infinite;
   transform: scale(1.5) translateY(-40%);
   background-color: transparent;
-  image-rendering: pixelated; /* Keeps the sprite sharp */
+  image-rendering: pixelated;
   background-repeat: no-repeat; 
 }
 
 .stewardess2 {
-  width: 64px; /* Width of a single frame */
-  height: 64px; /* Height of a single frame */
-  background-image: url('./assets/characters/stewardess_2.png'); /* Path to sprite sheet */
-  background-size: auto; /* Ensure proper scaling */
-  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  width: 64px;
+  height: 64px;
+  background-image: url('./assets/characters/stewardess_2.png');
+  background-size: auto;
+  animation: idleAnimationDown 1s steps(2) infinite;
   transform: scale(1.5) translateY(-40%);
   background-color: transparent;
-  image-rendering: pixelated; /* Keeps the sprite sharp */
+  image-rendering: pixelated;
   background-repeat: no-repeat; 
 }
 
 .pilot {
-  width: 64px; /* Width of a single frame */
-  height: 64px; /* Height of a single frame */
-  background-image: url('./assets/characters/pilot.png'); /* Path to sprite sheet */
-  background-size: auto; /* Size of the entire sprite sheet */
-  background-size: auto; /* Ensure proper scaling */
-  animation: idleAnimationLeft 1s steps(2) infinite; /* Loop idle animation */
+  width: 64px;
+  height: 64px;
+  background-image: url('./assets/characters/pilot.png');
+  background-size: auto;
+  animation: idleAnimationLeft 1s steps(2) infinite;
   transform: scale(1.5) translateY(-40%);
   background-color: transparent;
-  image-rendering: pixelated; /* Keeps the sprite sharp */
+  image-rendering: pixelated;
   background-repeat: no-repeat; 
 }
 
 .player {
-  width: 64px; /* Width of a single frame */
-  height: 64px; /* Height of a single frame */
-  background-image: url('./assets/characters/main_character.png'); /* Path to sprite sheet */
-  background-size: auto; /* Ensure proper scaling */
-  background-position: 0px -1536px; /* Start at row 25, column 1 */
-  animation: idleAnimationDown 1s steps(2) infinite; /* Loop idle animation */
+  width: 64px;
+  height: 64px;
+  background-image: url('./assets/characters/main_character.png');
+  background-size: auto;
+  background-position: 0 -1536px;
+  animation: idleAnimationDown 1s steps(2) infinite;
   transform: scale(1.5) translateY(-40%);
   background-color: transparent;
-  image-rendering: pixelated; /* Keeps the sprite sharp */
+  image-rendering: pixelated;
   background-repeat: no-repeat; 
   z-index: 100;
 }
 
-/* Walking animations */
 .player.moving-up {
-  animation: moveUp 0.8s steps(4) forwards; /* Walk up animation */
+  animation: moveUp 0.8s steps(4) forwards;
 }
 
 .player.moving-left {
-  animation: moveLeft 0.8s steps(4) forwards; /* Walk left animation */
+  animation: moveLeft 0.8s steps(4) forwards;
 }
 
 .player.moving-down {
-  animation: moveDown 0.8s steps(4) forwards; /* Walk down animation */
+  animation: moveDown 0.8s steps(4) forwards;
 }
 
 .player.moving-right {
-  animation: moveRight 0.8s steps(4) forwards; /* Walk right animation */
+  animation: moveRight 0.8s steps(4) forwards;
 }
 
-/* row 23 (up), row24 (left),  row 26 (right)
-/* Idle animation (Row 25) */
+
 @keyframes idleAnimationDown {
   0% {
-    background-position: 0px -1536px; /* Row 25, Column 1 */
+    background-position: 0 -1536px;
   }
+
   100% {
-    background-position: -128px -1536px; /* Row 25, Column 2 */
+    background-position: -128px -1536px;
   }
 }
 
 @keyframes idleAnimationLeft {
   0% {
-    background-position: 0px -1472px; /* Row 25, Column 1 */
+    background-position: 0 -1472px;
   }
+
   100% {
-    background-position: -128px -1472px; /* Row 25, Column 2 */
+    background-position: -128px -1472px;
   }
 }
 
 @keyframes idleAnimationUp {
   0% {
-    background-position: 0px -1408px; /* Row 25, Column 1 */
+    background-position: 0 -1408px;
   }
+
   100% {
-    background-position: -128px -1408px; /* Row 25, Column 2 */
+    background-position: -128px -1408px;
   }
 }
 
 @keyframes idleAnimationRight {
   0% {
-    background-position: 0px -1600px; /* Row 25, Column 1 */
+    background-position: 0 -1600px;
   }
+
   100% {
-    background-position: -128px -1600px; /* Row 25, Column 2 */
+    background-position: -128px -1600px;
   }
 }
 
-/* Walking animations (updated for 9 frames) */
+
 @keyframes moveUp {
   0% {
-    background-position: 0px -512px; /* Row 9, Column 1 */
+    background-position: 0 -512px;
   }
+
   100% {
-    background-position: -576px -512px; /* Row 9, Column 9 */
+    background-position: -576px -512px;
   }
 }
 
 @keyframes moveLeft {
   0% {
-    background-position: 0px -576px; /* Row 10, Column 1 */
+    background-position: 0 -576px;
   }
+
   100% {
-    background-position: -576px -576px; /* Row 10, Column 9 */
+    background-position: -576px -576px;
   }
 }
 
 @keyframes moveDown {
   0% {
-    background-position: 0px -640px; /* Row 11, Column 1 */
+    background-position: 0 -640px;
   }
+
   100% {
-    background-position: -576px -640px; /* Row 11, Column 9 */
+    background-position: -576px -640px;
   }
 }
 
 @keyframes moveRight {
   0% {
-    background-position: 0px -704px; /* Row 12, Column 1 */
+    background-position: 0 -704px;
   }
+
   100% {
-    background-position: -576px -704px; /* Row 12, Column 9 */
+    background-position: -576px -704px;
   }
 }
 
@@ -292,23 +308,23 @@ body {
 }
 
 #dialog-box {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgb(0 0 0 / 90%);
   border-top: 2px solid white;
-  padding: 1vh 2vw; /* Padding for spacing */
+  padding: 1vh 2vw;
   color: white;
-  font-family: "zpix", serif;
+  font-family: zpix, serif;
   font-size: 1.5vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  height: 20%; /* Increased height to make room for options */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: 20%;
+  box-shadow: 0 0 10px rgb(0 0 0 / 50%);
   z-index: 2000;
 }
 
@@ -325,11 +341,11 @@ body {
 
 #dialog-responses {
   position: absolute;
-  bottom: 10px; /* Align closer to the top of the dialog box */
-  right: 10px; /* Add padding from the right */
+  bottom: 10px;
+  right: 10px;
   text-align: right;
   z-index: 1100;
-  max-width: calc(100% - 20px); /* Prevent overflow */
+  max-width: calc(100% - 20px);
 }
 
 #dialog-responses ul {
@@ -339,7 +355,7 @@ body {
 }
 
 #dialog-responses li {
-  font-family: "zpix", serif;
+  font-family: zpix, serif;
   font-size: 2vh;
   color: white;
   margin-bottom: 5px;
@@ -351,80 +367,74 @@ body {
   font-size: 2.5vh;
 }
 
-/* 8-Bit Styled Pop-Up */
 #popup-box {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 450px; /* Adjust width */
   width: 450px;
-  max-width: 90%;
-  background-color: #ffe680;; /* Bright yellow for 8-bit style */
-  border: 4px solid #000; /* Black border for contrast */
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-  font-family: 'Press Start 2P', serif; /* Use pixel-style font */
+  max-width: 80%;
+  background-color: #ffe680;
+  border: 4px solid #000;
+  box-shadow: 0 0 8px rgb(0 0 0 / 80%);
+  font-family: 'Press Start 2P', serif;
   font-size: 14px;
   color: #000;
   text-align: left;
   z-index: 1100;
   padding: 20px;
   image-rendering: pixelated;
-  max-height: 90vh; /* Prevent popup from exceeding viewport height */
+  max-height: 90vh;
 }
-/* Header (Title) */
+
 #popup-box .popup-title {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
-  border-bottom: 2px solid #000; /* Underline for title */
+  border-bottom: 2px solid #000;
   padding-bottom: 5px;
   color: #333;
 }
 
-/* Content Section */
 #popup-box .popup-content {
   display: flex;
-  align-items: flex-start; /* Align items to the top */
+  align-items: flex-start;
   margin-top: 10px;
-  flex-grow: 1; /* Allow the content section to grow */
-  gap: 10px; /* Space between text and image */
+  flex-grow: 1;
+  gap: 10px;
 }
 
-/* Text Section */
 #popup-box .popup-text {
-  flex-grow: 1; /* Allow the text to take up remaining space */
+  flex-grow: 1;
   font-size: 14px;
   line-height: 1.8;
-  color: #222; /* Darker text color for readability */
-  overflow-wrap: break-word; /* Prevent long words from breaking layout */
+  color: #222;
+  overflow-wrap: break-word;
 }
 
-/* Image Section */
 #popup-box .popup-image {
-  width: 100px; /* Fixed width for the image */
-  height: 100px; /* Fixed height for the image */
-  flex-shrink: 0; /* Prevent the image from resizing */
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
   background-color: #fff;
   border: 2px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 10px;
-  overflow: hidden; /* Prevent image overflow */
+  overflow: hidden;
 }
 
 #popup-box .popup-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image scales properly */
+  object-fit: cover;
 }
 
-/* X Button Styling */
 #popup-box .popup-close {
   position: absolute;
-  top: -15px; /* Slightly above the box */
-  right: -15px; /* Slightly to the right */
+  top: -15px;
+  right: -15px;
   width: 35px;
   height: 35px;
   background-color: #000;
@@ -439,10 +449,9 @@ body {
 }
 
 #popup-box .popup-close:hover {
-  background-color: #ff0000;
+  background-color: #f00;
 }
 
-/* Black overlay for fade transition */
 #transition-overlay {
   position: fixed;
   top: 0;
@@ -450,21 +459,20 @@ body {
   width: 100%;
   height: 100%;
   background-color: black;
-  z-index: 100; /* Ensure it appears on top */
-  pointer-events: none; /* Prevent interactions */
-  opacity: 0; /* Fully transparent initially */
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
   transition: opacity 0.8s ease-in-out;
 }
 
 #transition-overlay.fade-in {
-  opacity: 1; /* Fully visible during fade-in */
+  opacity: 1;
 }
 
 #transition-overlay.fade-out {
-  opacity: 0; /* Fully transparent during fade-out */
+  opacity: 0;
 }
 
-/* Text styles for the transition overlay */
 #transition-overlay .text-container {
   position: absolute;
   top: 50%;
@@ -472,18 +480,18 @@ body {
   transform: translate(-50%, -50%);
   color: white;
   font-size: 24px;
-  font-family: "zpix", sans-serif;
+  font-family: zpix, sans-serif;
   text-align: center;
-  opacity: 0; /* Start invisible */
-  transition: opacity 0.5s ease-in-out; /* Smooth fade-in for the text */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
 #transition-overlay.fade-in .text-container {
-  opacity: 1; /* Fade in text during fade-in */
+  opacity: 1;
 }
 
 #transition-overlay.fade-out .text-container {
-  opacity: 0; /* Fade out text during fade-out */
+  opacity: 0;
 }
 
 
@@ -493,294 +501,69 @@ body {
   left: 10px;
   color: white;
   font-size: 18px;
-  font-family: "zpix", sans-serif;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for visibility */
+  font-family: zpix, sans-serif;
+  background: rgb(0 0 0 / 60%); 
   padding: 10px;
   border-radius: 5px;
-  z-index: 101; /* Ensure it appears above the game elements */
+  z-index: 101;
 }
 
 #game-info div {
   margin-bottom: 5px;
 }
 
-/* Hide the game container initially */
 #game-container {
   display: none;
 }
 
-/* Transition effect for visibility changes */
 .hidden {
   display: none !important;
 }
 
-/* Title Page Container */
-#title-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
-
-/* Title Styling */
-#title-page h1 {
-  font-size: 48px;
-  margin: 0 0 20px;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
-}
-
-/* Button Styling */
-#title-page button {
-  font-family: 'Press Start 2P', sans-serif;
-  font-size: 16px;
-  color: white;
-  background-color: #333;
-  border: 2px solid #777;
-  padding: 10px 20px;
-  margin: 10px 0;
-  border-radius: 5px;
-  text-transform: uppercase;
+#menu-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin-top: 1%;
+  margin-right: 1%;
+  font-size: 24px;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#title-page button:hover {
-  background-color: #555;
-  border-color: white;
-  transform: scale(1.1);
-}
-
-/* "?" Button Styling */
-#help-button {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  font-size: 20px;
-  color: white;
+  color: #333;
   background-color: transparent;
   border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#title-page .footer {
-  font-size: 12px;
-  margin-top: 20px;
-  color: #aaa;
-}
-
-/* Modal overlay */
-#fact-sheet-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: 1000;
+  transform: scale(4);
 }
 
-/* Hidden by default */
-.hidden {
-  display: none;
+#menu-button:hover {
+  color: #555;
 }
 
-/* Modal content box */
-.modal-content {
-  background: white;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 600px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  position: relative;
-}
-
-/* Modal header */
-.modal-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-/* Picture container */
-.modal-pic img {
-  width: 100px;
-  height: 50px;
-  background-size: cover;
-  margin-bottom: 10px;
-  image-rendering: pixelated;
-
-  margin-right: 15px;
-}
-
-/* Title styling */
-.modal-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.modal-body ul {
-  list-style: disc;
-  margin: 0;
-  padding: 0 20px; /* Add padding for indentation */
-  font-size: 16px; /* Adjust font size if needed */
-  line-height: 1.8; /* Increase line height for better readability */
-}
-
-.modal-body ul li {
-  margin-bottom: 5px; /* Add space between list items */
-}
-
-/* Close button */
-.close-button {
+#menu-popup {
   position: absolute;
-  top: -15px; /* Slightly above the box */
-  right: -15px; /* Slightly to the right */
-  width: 35px;
-  height: 35px;
-  background-color: #000;
-  color: #fff;
-  font-family: 'Press Start 2P', serif;
-  font-size: 16px;
-  text-align: center;
-  line-height: 35px;
-  border: 2px solid #fff;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.close-button:hover {
-  background-color: #ff0000;
-}
-
-#traveling-plane {
-  position: absolute;
-  top: 20%; /* Adjust to position the plane vertically */
-  left: -100px; /* Start off-screen to the left */
-  width: 50px; /* Adjust size as needed */
-  height: auto;
-  z-index: -1;
-  transform: scale(6);
-}
-
-@keyframes fly-across {
-  0% {
-    left: -100px; /* Start off-screen to the left */
-  }
-  100% {
-    left: 110%; /* End off-screen to the right */
-  }
-}
-
-#traveling-plane {
-  animation: fly-across 10s linear infinite; /* 8 seconds for one loop */
-}
-
-/* Modal styling */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.hidden {
-  display: none;
-}
-
-.destination-content {
-  background: #fff;
-  padding: 20px;
+  top: 50px;
+  right: 10px;
+  background-color: rgb(255 255 255 / 90%);
+  border: 1px solid #ccc;
   border-radius: 8px;
-  text-align: center;
-  width: 400px;
-}
-
-.destination-content ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.destination-content li {
-  margin: 10px 0;
-  cursor: pointer;
-  font-weight: bold;
-  color: #007BFF;
-}
-
-.destination-content li:hover {
-  text-decoration: underline;
-}
-
-#close-modal {
-  margin-top: 20px;
-  padding: 10px 15px;
-  border: none;
-  background-color: #007BFF;
-  color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Press Start 2P', 'Nanum Gothic', sans-serif;;
-}
-
-#close-modal:hover {
-  background-color: #0056b3;
-}
-
-#destinations-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
-  gap: 20px; /* Space between items */
-  justify-items: center;
-  margin-top: 20px;
-}
-
-.destination-item {
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  height: 100px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
+  z-index: 1000;
+}
+
+#menu-popup .corner-button {
+  margin: 5px 0;
+  padding: 10px;
   background-color: #f0f0f0;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  font-size: 25px;
+  font-family: Zpix, sans-serif;
 }
 
-.destination-item:hover {
-  background-color: #007bff;
-  transform: scale(1.05);
-  color: white;
-}
-
-.destination-item img {
-  width: 100px;
-  height: 50px;
-  background-size: cover;
-  margin-bottom: 10px;
-  image-rendering: pixelated;
-}
-
-.destination-item span {
-  font-weight: bold;
-  font-size: 14px;
-  text-align: center;
+#menu-popup .corner-button:hover {
+  background-color: #e0e0e0;
 }

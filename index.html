@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Where's Carlson?</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="titlePage.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
     <h1>Where's Carlson?</h1>
     <img src="./assets/content/titlePage.png" alt="Traveling Plane" id="traveling-plane">
     <button id="start-button">Start Game</button>
-    <button id="destinations-button">Destinations</button>
+    <button id="destinations-button">Where Carlson was last seen</button>
     <button id="help-button" class="corner-button">?</button>
     <div class="footer">© 2025 Carltas Airlines. All rights reserved.</div>
   </div>
@@ -32,6 +33,12 @@
         <div class="grid"></div>
       </div>
     </div>
+
+    <div id="menu-button">≡</div>
+    <div id="menu-popup" class="hidden">
+      <button id="help" class="corner-button">Help</button>
+      <button id="quit-button" class="corner-button">Quit</button>
+  </div>
   </div>
   
   <!-- Dialog Box -->
@@ -54,7 +61,7 @@
 
   <div id="destinations-modal" class="modal hidden">
     <div class="destination-content">
-      <h2>Choose Your Destination</h2>
+      <h2>Locations</h2>
       <div id="destinations-grid">
         <div class="destination-item" data-country="Australia">
           <img src="./assets/flags/Australia.png" alt="Australia Flag" class="flag">
