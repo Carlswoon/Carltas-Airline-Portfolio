@@ -63,7 +63,7 @@ function titleScreenMessage() {
   const dialogName = document.getElementById('dialog-name');
   const dialogText = document.getElementById('dialog-text');
   const dialogResponse = document.getElementById('dialog-responses');
-
+  game.state.isDialogTransitioning = true;
   const originalStyles = {
     dialogBox: {
       width: dialogBox.style.width,
@@ -89,10 +89,9 @@ function titleScreenMessage() {
   dialogName.style.marginLeft = '2%';
   dialogText.style.marginLeft = '2%';
   dialogResponse.style.marginRight = '3%';
-  dialogText.style.fontSize = '25px';
+  dialogText.style.fontSize = '4vH';
   dialogName.textContent = 'Pilot';
   dialogText.textContent = TITLE_PAGE_CONTENTS.INTRO_MESSAGE;
-
   showDialog(
     dialogBox,
     TITLE_PAGE_CONTENTS.INTRO_MESSAGE_OPTION1,
@@ -150,10 +149,6 @@ function titleScreenMessage() {
     dialogText.style.fontSize = originalStyles.dialogText.fontSize;
   }
 }
-
-window.addEventListener('load', () => {
-  titleScreenMessage();
-});
 
 
 function generateMap(mapArray) {
@@ -238,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   helpButton.addEventListener('click', () => {
-    createModal(TITLE_PAGE_CONTENTS.HELP_BUTTON);
+    titleScreenMessage();
   });
 
   document.addEventListener('keydown', async(event) => {
@@ -607,27 +602,26 @@ function setupTransition(region, map, overlayText, playerPosition) {
 document.addEventListener('keydown', handleDialogInput);
 
 function handleDialogInput(event) {
-  if (!game.state.isDialogOpen) {return;}
-
-  let selectedIndex = game.state.dialog.selectedIndex || 0;
-  const responses = game.state.dialog.responses;
-
-  if (event.key === 'ArrowUp') {
-    selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
-    updateDialogSelection(selectedIndex);
-  } else if (event.key === 'ArrowDown') {
-    selectedIndex = (selectedIndex + 1) % responses.length;
-    updateDialogSelection(selectedIndex);
-  } else if (event.key === 'Enter') {
-    const selectedResponse = responses[selectedIndex];
-    if (game.state.dialog.onResponse) {
-      game.state.dialog.onResponse(selectedResponse);
-    }
-    if (game.state.isDialogTransitioning) {selectedIndex = 0;}
-    if (!game.state.isDialogTransitioning) {closeDialog();}
+  if (!game.state.isDialogOpen) {
+    return;
   }
 
+  const responses = game.state.dialog.responses;
+  let selectedIndex = game.state.dialog.selectedIndex || 0; // Use the current selectedIndex or default to 0
+
+  if (event.key === 'ArrowUp') {
+    selectedIndex = (selectedIndex - 1 + responses.length) % responses.length; // Navigate up
+    updateDialogSelection(selectedIndex);
+  } else if (event.key === 'ArrowDown') {
+    selectedIndex = (selectedIndex + 1) % responses.length; // Navigate down
+    updateDialogSelection(selectedIndex);
+  } else if (event.key === 'Enter') {
+    selectResponse(selectedIndex);
+    return;
+  }
+  // Update the state with the current selected index
   game.state.dialog.selectedIndex = selectedIndex;
+
 }
 
 function updateDialogSelection(selectedIndex) {
@@ -679,6 +673,9 @@ function showDialog(dialogBox, responses = [], onResponse = null) {
     });
     responseList.appendChild(listItem);
   });
+
+  dialogBox.setAttribute('tabindex', '-1'); // Make the dialog box focusable
+  dialogBox.focus();
 }
 
 function selectResponse(selectedIndex) {
