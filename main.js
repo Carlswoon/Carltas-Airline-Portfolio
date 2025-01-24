@@ -13,7 +13,8 @@ const game = {
     isMoving: false,
     currentDirection: PLAYER.STARTING_DIRECTION,
     moveDuration: PLAYER.SPEED,
-    idleTimeout: null
+    idleTimeout: null,
+    language: 'EN'
   },
   progress: {
     region: GAME_STATS.STARTING_REGION,
@@ -158,6 +159,8 @@ function generateMap(mapArray) {
         div.classList.add('player');
       } else if (mapArray[i][j] < 20 && mapArray[i][j] >= 10) {
         div.classList.add('lower_door');
+      } else if (mapArray[i][j] === 5) {
+        div.classList.add('globe');
       }
 
       plane.appendChild(div);
@@ -285,14 +288,19 @@ function movePlayer() {
 }
 
 function discoverSecret(row) {
-  const { targetTile, title, content: description, image: imagePath } = row;
+  const { language } = game.state;
+
+  const { targetTile, title, content, image } = row;
+
+  const localizedTitle = title[language] || title.EN;
+  const localizedContent = content[language] || content.EN;
 
   if (!game.progress.secretsDiscovered.has(targetTile)) {
     game.progress.secretsDiscovered.add(targetTile);
     updateGameInfo();
   }
 
-  showPopup(title, description, imagePath);
+  showPopup(localizedTitle, localizedContent, image);
 }
 
 function setIdleAnimation(direction) {
@@ -336,38 +344,24 @@ function handleInteraction() {
     const dialogBox = document.getElementById('dialog-box');
     const dialogName = document.getElementById('dialog-name');
     const dialogText = document.getElementById('dialog-text');
-    if (targetTile === 2) {
-      dialogName.textContent = 'Stewardess';
-      dialogText.textContent = 'Welcome aboard! How can I assist you?';
-      showDialog(dialogBox, ['I need a tutorial please', 'I am all goodies :)'], (response) => {
-        if (response === 'I need a tutorial please') {
-          dialogText.textContent = 'You can use W, A, S, D keys to move around. Use E key the interact with npc and the secrets hidden in this plane. Do you have anymore questions?';
+    if (targetTile === 2 || targetTile === 3) {
+      const lang = game.state.language || 'EN';
+      const translations = GAME_CONTENTS.DIALOGUE[lang];
+
+      dialogName.textContent = translations.stewardess;
+      dialogText.textContent = translations.welcome;
+
+      showDialog(dialogBox, [translations.tutorialPrompt, translations.noHelpNeeded], (response) => {
+        if (response === translations.tutorialPrompt) {
+          dialogText.textContent = translations.tutorialResponse;
           game.state.isDialogTransitioning = true;
-          showDialog(dialogBox, ['No'], (response) => {
+          showDialog(dialogBox, [translations.noResponse], (response) => {
             game.state.isDialogTransitioning = false;
           });
-        } else if (response === 'I am all goodies :)') {
-          dialogText.textContent = 'Alright, let me know if you change your mind.';
+        } else if (response === translations.noHelpNeeded) {
+          dialogText.textContent = translations.changeMindResponse;
           game.state.isDialogTransitioning = true;
-          showDialog(dialogBox, ['Continue'], (response) => {
-            game.state.isDialogTransitioning = false;
-          });
-        }
-      });
-    } else if (targetTile === 3) {
-      dialogName.textContent = 'Stewardess';
-      dialogText.textContent = 'Welcome aboard! How can I assist you?';
-      showDialog(dialogBox, ['I need a tutorial please', 'I am all goodies :)'], (response) => {
-        if (response === 'I need a tutorial please') {
-          dialogText.textContent = 'You can use W, A, S, D keys to move around. Use E key the interact with npc and the secrets hidden in this plane. Do you have anymore questions?';
-          game.state.isDialogTransitioning = true;
-          showDialog(dialogBox, ['No'], (response) => {
-            game.state.isDialogTransitioning = false;
-          });
-        } else if (response === 'I am all goodies :)') {
-          dialogText.textContent = 'Alright, let me know if you change your mind.';
-          game.state.isDialogTransitioning = true;
-          showDialog(dialogBox, ['Continue'], (response) => {
+          showDialog(dialogBox, [translations.continue], (response) => {
             game.state.isDialogTransitioning = false;
           });
         }
@@ -400,25 +394,25 @@ function handleInteraction() {
       setupTransition(
         2,
         MAP.REGION2,
-        GAME_CONTENTS.TRANSITIONING,
+        'TRANSITIONING',
         PLAYER.REGION2_POSITION
       );
     } else if (targetTile === TILES.REGION3) {
       setupTransition(
         3,
         MAP.REGION3,
-        GAME_CONTENTS.TRANSITIONING,
+        'TRANSITIONING',
         PLAYER.REGION3_POSITION
       );
     } else if (targetTile === TILES.REGION1) {
       setupTransition(
         1,
         MAP.REGION1,
-        GAME_CONTENTS.TRANSITIONING,
+        'TRANSITIONING',
         PLAYER.REGION1_POSITION
       );
     } else if (targetTile === TILES.COCKPIT_DOOR) {
-      if (!(game.progress.secretsDiscovered.size <= 12)) {
+      if (!(game.progress.secretsDiscovered.size >= 12)) {
         showPopup('locked', 'come back when you have discovered at least 12 secrets');
       } else {
         setupTransition(
@@ -429,23 +423,52 @@ function handleInteraction() {
         );
       }
     } if (targetTile === TILES.PILOT) {
-      dialogName.textContent = 'Pilot Carlson';
-      dialogText.textContent = 'ah you have finally found me! Now that you know all about me I guess I really don\'t have anything else to say...';
-      showDialog(dialogBox, ['Continue'], (response) => {
-        if (response === 'Continue') {
-          dialogText.textContent = 'BUT! If you have anymore questions, here is my email address which you can contact me at: carlson280306@gmail.com';
+      const lang = game.state.language || 'EN';
+      const translations = GAME_CONTENTS.DIALOGUE[lang];
+
+      dialogName.textContent = translations.pilot;
+      dialogText.textContent = translations.pilotIntro;
+
+      showDialog(dialogBox, [translations.continue], (response) => {
+        if (response === translations.continue) {
+          dialogText.textContent = translations.pilotEmail;
           game.state.isDialogTransitioning = true;
-          showDialog(dialogBox, ['Ok thanks '], (response) => {
+
+          showDialog(dialogBox, [translations.thanks], (response) => {
             game.state.isDialogTransitioning = false;
-            showPopup('CONGRATULATIONS', 'YOU HAVE FOUND CARLSON!', './assets/content/ending.gif');
+            showPopup(
+              translations.congratulations,
+              translations.foundCarlson,
+              './assets/content/ending.gif'
+            );
           });
         }
       });
+    } else if (targetTile === TILES.GLOBE) {
+      selectLanguage();
     }
   }
 }
 
-function setupTransition(region, map, overlayText, playerPosition) {
+function selectLanguage() {
+  const languageMenu = document.getElementById('language-menu');
+
+  languageMenu.classList.remove('hidden');
+
+  document.querySelectorAll('.language-options button').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      const selectedLanguage = event.currentTarget.dataset.lang;
+      game.state.language = selectedLanguage;
+
+      languageMenu.classList.add('hidden');
+    });
+  });
+}
+
+function setupTransition(region, map, overlayTextKey, playerPosition) {
+  const language = game.state.language || 'EN';
+  const overlayText = GAME_CONTENTS.TRANSITIONING[language];
+
   game.progress.region = region;
   updateGameInfo();
 
@@ -465,7 +488,7 @@ function setupTransition(region, map, overlayText, playerPosition) {
       idleTimeout: null
     };
     const direction = game.state.currentDirection;
-    game.state.position = { ... playerPosition[direction] };
+    game.state.position = { ...playerPosition[direction] };
     generateMap(gameState2.map);
     Object.assign(game.state, gameState2);
     game.state.player = document.querySelector('.player');
@@ -482,6 +505,7 @@ function setupTransition(region, map, overlayText, playerPosition) {
     }, 1000);
   }, 800);
 }
+
 
 document.addEventListener('keydown', handleDialogInput);
 

@@ -100,6 +100,17 @@ body {
   image-rendering: pixelated;
 }
 
+.globe {
+  background-image: url('./assets/setting/globe.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated; 
+  width: 64px;
+  height: 64px;
+  z-index: 100;
+  background-color: #5d5d5d;
+}
 
 .upper_door {
   background-color: #6e6d6d;
@@ -566,4 +577,70 @@ body {
 
 #menu-popup .corner-button:hover {
   background-color: #e0e0e0;
+}
+
+.language-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #e0f7fa;
+  border: 3px solid #0288d1;
+  border-radius: 20px;
+  padding: 20px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.language-menu.hidden {
+  display: none;
+}
+
+.language-menu h2 {
+  font-family: zpix, serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #0288d1;
+}
+
+.language-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.language-options button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: #ffffff;
+  border: 2px solid #0288d1;
+  border-radius: 10px;
+  padding: 10px 15px;
+  width: 140px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: zpix, serif;
+  font-size: 16px;
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.language-options button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.language-options img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.language-options span {
+  white-space: nowrap;
 }

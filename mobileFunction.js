@@ -13,22 +13,20 @@ export function enableMobileInteraction(game, handleInteraction, triggerKey) {
     const width = rect.width;
     const height = rect.height;
 
-    // Determine the region tapped for directional movement
     if (clickX < width * 0.3) {
-      triggerKey('a'); // Left
-      return; // Prevent further processing
+      triggerKey('a');
+      return;
     } else if (clickX > width * 0.7) {
-      triggerKey('d'); // Right
+      triggerKey('d');
       return;
     } else if (clickY < height * 0.3) {
-      triggerKey('w'); // Up
+      triggerKey('w');
       return;
     } else if (clickY > height * 0.7) {
-      triggerKey('s'); // Down
+      triggerKey('s');
       return;
     }
 
-    // If not directional movement, handle interaction
     const gridSize = game.state.gridSize;
     const targetX = Math.floor(clickX / gridSize);
     const targetY = Math.floor(clickY / gridSize);

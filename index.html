@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <div id="title-page">
@@ -39,7 +38,7 @@
     <div id="menu-popup" class="hidden">
       <button id="help" class="corner-button">Help</button>
       <button id="quit-button" class="corner-button">Quit</button>
-  </div>
+    </div>
   </div>
   
   <!-- Dialog Box -->
@@ -92,6 +91,29 @@
       <button id="close-modal">Close</button>
     </div>
   </div>
+
+  <div id="language-menu" class="language-menu hidden">
+    <h2>Choose Your Language</h2>
+    <div class="language-options">
+      <button data-lang="EN">
+        <img src="./assets/flags/America.png" alt="English Flag" />
+        <span>English</span>
+      </button>
+      <button data-lang="CN">
+        <img src="./assets/flags/China.png" alt="Chinese Flag" />
+        <span>Chinese</span>
+      </button>
+      <button data-lang="KR">
+        <img src="./assets/flags/Korea.png" alt="Korean Flag" />
+        <span>Korean</span>
+      </button>
+      <button data-lang="PH">
+        <img src="./assets/flags/Philippines.png" alt="Filipino Flag" />
+        <span>Filipino</span>
+      </button>
+    </div>
+  </div>
+
   <script type="module" src="main.js" defer></script>
 </body>
 </html>
