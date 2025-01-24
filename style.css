@@ -1,6 +1,8 @@
 @font-face {
-  font-family: Zpix;
-  src: url('./assets/fonts/zpix.ttf') format('truetype');
+  font-family: 'Zpix';
+  src: url('./assets/fonts/zpix.woff2') format('woff2'),
+       url('./assets/fonts/zpix.ttf') format('truetype');
+  font-display: swap;
 }
 
 .zpix-font {
