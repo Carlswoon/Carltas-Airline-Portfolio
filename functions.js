@@ -34,10 +34,8 @@ export function showPopup(title, message, imagePath = null) {
 
   popupContent.appendChild(popupImage);
 
-  // Add the content section to the popup
   popup.appendChild(popupContent);
 
-  // Create the X button
   const closeButton = document.createElement('div');
   closeButton.classList.add('popup-close');
   closeButton.textContent = 'X';
@@ -46,10 +44,8 @@ export function showPopup(title, message, imagePath = null) {
   };
   popup.appendChild(closeButton);
 
-  // Add the pop-up to the body
   document.body.appendChild(popup);
 
-  // Draggable functionality
   let isDragging = false;
   let offsetX = 0;
   let offsetY = 0;
@@ -57,23 +53,20 @@ export function showPopup(title, message, imagePath = null) {
   popup.addEventListener('mousedown', (event) => {
     isDragging = true;
 
-    popup.style.cursor = 'grabbing'; // Indicate dragging
-    popup.style.transition = 'none'; // Disable transition for smooth drag
+    popup.style.cursor = 'grabbing';
+    popup.style.transition = 'none';
 
-    // Calculate the offset between the popup's top-left corner and the mouse position
     const rect = popup.getBoundingClientRect();
     offsetX = event.clientX - rect.left;
     offsetY = event.clientY - rect.top;
-    event.preventDefault(); // Prevent text selection while dragging
+    event.preventDefault();
   });
 
   document.addEventListener('mousemove', (event) => {
     if (isDragging) {
-      // Calculate new popup position based on mouse movement and offset
       const x = event.clientX - offsetX;
       const y = event.clientY - offsetY;
 
-      // Update the popup's position
       popup.style.left = `${x}px`;
       popup.style.top = `${y}px`;
       popup.style.transform = 'none';
@@ -83,8 +76,47 @@ export function showPopup(title, message, imagePath = null) {
   document.addEventListener('mouseup', () => {
     if (isDragging) {
       isDragging = false;
-      popup.style.cursor = ''; // Reset cursor
-      popup.style.transition = ''; // Re-enable transition after drag
+      popup.style.cursor = '';
+      popup.style.transition = '';
     }
   });
+}
+
+export function createModal({ title, imageSrc, facts }) {
+  const modal = document.createElement('div');
+  modal.id = 'fact-sheet-modal';
+  modal.className = 'hidden';
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="close-button">x</button>
+      <div class="modal-header">
+        <div class="modal-pic">
+          <img src="${imageSrc}" alt="Picture" />
+        </div>
+        <h1 class="modal-title">${title}</h1>
+      </div>
+      <div class="modal-body">
+        <ul>
+          ${facts.map((fact) => `<li>${fact}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
+
+  modal.querySelector('.close-button').addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.remove();
+  });
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.classList.add('hidden');
+      modal.remove();
+    }
+  });
+
+  document.body.appendChild(modal);
+
+  modal.classList.remove('hidden');
 }

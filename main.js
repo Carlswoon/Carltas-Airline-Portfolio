@@ -1,61 +1,30 @@
-import { showPopup } from './functions.js';
-import { setRandomHeight } from './titleScreen.js';
+import { showPopup, createModal } from './functions.js';
+import { setRandomHeight, setupHelpButton } from './titleScreen.js';
 import { calculateAisle } from './game.js';
-import { GAME_CONTENTS, TITLE_PAGE_CONTENTS } from './contents.js';
+import { GAME_CONTENTS, TITLE_PAGE_CONTENTS, PLAYER, GAME_STATS, MAP, TILES } from './constants.js';
+import { isMobile, enableMobileInteraction, triggerKey } from './mobileFunction.js';
+
 const game = {
   state : {
-    map: [
-      [1, 1, 1, 1, 1, 1, 8, 1, 1],
-      [1, 9, 1, 1, 1, 1, 1, 1, 1],
-      [-21, -1, -1, -1, -1, 2, -1, -1, 3],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [201, 201, -101, 201, 201, 201, -101, 201, 201],
-      [202, 202, -102, 202, 202, 202, -102, 202, 202],
-      [203, 203, -103, 203, 203, 203, -103, 203, 203],
-      [204, 204, -104, 204, 204, 204, -104, 204, 204],
-      [0, 0, 0, 0, 0, 0, 11, 0, 0]
-    ],
-    gridSize: 64,
-    position: { x: 0, y: 128 },
+    map: MAP.REGION1,
+    gridSize: PLAYER.SIZE,
+    position: PLAYER.POSITION,
     player: document.querySelector('.player'),
     isMoving: false,
-    currentDirection: 'down',
-    moveDuration: 0.3,
+    currentDirection: PLAYER.STARTING_DIRECTION,
+    moveDuration: PLAYER.SPEED,
     idleTimeout: null
   },
   progress: {
-    region: 1,
-    totalRegions: 3,
+    region: GAME_STATS.STARTING_REGION,
+    totalRegions: GAME_STATS.TOTAL_REGIONS,
     secretsDiscovered: new Set(),
-    totalSecrets: 15
+    totalSecrets: GAME_STATS.TOTAL_SECRETS
   }
 };
 
-function isMobile() {
-  return /Mobi|Android|iPad|iPhone/i.test(navigator.userAgent);
-}
-
-function enableMobileTileInteraction() {
-  const gameContainer = document.getElementById('game-container'); // Adjust to your container ID
-
-  gameContainer.addEventListener('click', (event) => {
-    const gridSize = game.state.gridSize;
-
-    const rect = gameContainer.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
-
-    const targetX = Math.floor(clickX / gridSize);
-    const targetY = Math.floor(clickY / gridSize);
-
-
-    handleInteraction(targetX, targetY);
-  });
-}
-
-// Enable mobile-specific interaction
 if (isMobile()) {
-  enableMobileTileInteraction();
+  enableMobileInteraction(game, handleInteraction, triggerKey);
 }
 
 function titleScreenMessage() {
@@ -150,6 +119,8 @@ function titleScreenMessage() {
   }
 }
 
+const helpButton = document.getElementById('help');
+setupHelpButton(helpButton, createModal, TITLE_PAGE_CONTENTS.HELP_BUTTON);
 
 function generateMap(mapArray) {
   const plane = document.querySelector('.grid');
@@ -272,47 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-
-document.addEventListener('touchstart', (event) => {
-  const touch = event.touches[0];
-  touchStartX = touch.clientX;
-  touchStartY = touch.clientY;
-});
-
-document.addEventListener('touchend', (event) => {
-  touchEndX = event.changedTouches[0].clientX;
-  touchEndY = event.changedTouches[0].clientY;
-
-  handleSwipe();
-});
-
-function handleSwipe() {
-  const deltaX = touchEndX - touchStartX;
-  const deltaY = touchEndY - touchStartY;
-
-  if (Math.abs(deltaX) > Math.abs(deltaY)) {
-    if (deltaX > 30) {
-      triggerKey('d');
-    } else if (deltaX < -30) {
-      triggerKey('a');
-    }
-  } else {
-    if (deltaY > 30) {
-      triggerKey('s');
-    } else if (deltaY < -30) {
-      triggerKey('w');
-    }
-  }
-}
-
-function triggerKey(key) {
-  const event = new KeyboardEvent('keydown', { key });
-  document.dispatchEvent(event);
-}
 
 function movePlayer() {
   game.state.isMoving = true;
@@ -354,11 +284,14 @@ function movePlayer() {
   }, game.state.moveDuration * 750);
 }
 
-function discoverSecret(targetTile, title, description, imagePath) {
+function discoverSecret(row) {
+  const { targetTile, title, content: description, image: imagePath } = row;
+
   if (!game.progress.secretsDiscovered.has(targetTile)) {
     game.progress.secretsDiscovered.add(targetTile);
     updateGameInfo();
   }
+
   showPopup(title, description, imagePath);
 }
 
@@ -439,103 +372,63 @@ function handleInteraction() {
           });
         }
       });
-    } if (targetTile === 201) {
-      discoverSecret(targetTile, 'Row A - About Me', 'Hi my name is Carlson and am a second year studying computer science at UNSW.', './assets/content/aisleA.jpg');
-    } else if (targetTile === 202) {
-      discoverSecret(targetTile, 'Row B - Beliefs', 'I strongly believe that everyone\'s purpose is to help each other grow', './assets/content/aisleB.avif');
-    } else if (targetTile === 203) {
-      discoverSecret(targetTile, 'Row C - Characteristics', 'Considerate, Dilligent, Easygoing, Funny, Honest', './assets/content/aisleC.png');
-    } else if (targetTile === 204) {
-      discoverSecret(targetTile, 'Row D - Dreams', 'I want to create a language learning app (better than duolingo) that will actually help people learn languages and become fluent in them.', './assets/content/aisleD.jpg');
-    } else if (targetTile === 205) {
-      discoverSecret(targetTile, 'Row E - Energy Sources', 'Chocolate, Kpop (good music in general), MEMES', './assets/content/aisleE.gif');
-    } else if (targetTile === 206) {
-      discoverSecret(targetTile, 'Row F - Fears', 'I am afraid of bugs. Both in real life and in coding. Why do they have such weird looking legs TwT', './assets/content/aisleF.JPG');
-    } else if (targetTile === 207) {
-      discoverSecret(targetTile, 'Row G - Gratitude', 'Grateful to my older brother to telling me to watch Harvard\'s CS50 before I was about to choose chemical engineering to study at UNSW', './assets/content/aisleG.avif');
-    } else if (targetTile === 208) {
-      discoverSecret(targetTile, 'Row H - Hobbies', 'Language learning. I am currently learning Chinese (doing ARTS2450 and ARTS2451 this year!) and Korean. Would like to become a polyglot. Also like dancing.', './assets/content/aisleH.jpg');
-    } else if (targetTile === 209) {
-      discoverSecret(targetTile, 'Row I - Incredible Puns', 'If I don\'t get arrays from my boss I will error 404', './assets/content/aisleI.jpg');
-    } else if (targetTile === 210) {
-      discoverSecret(targetTile, 'Row J - Joke Time', '01101100 01100101 01110100 00100000 01101000 01101001 01101101 00100000 01100011 01101111 01101111 01101011', './assets/content/aisleJ.png');
-    } else if (targetTile === 211) {
-      discoverSecret(targetTile, 'Row K - Kidding Time part 2', 'Yo computer science teaching mama so fat, she can flatten a binary tree in O(1). (this is not targeted at your mum)', './assets/content/aisleK.png');
-    } else if (targetTile === 212) {
-      discoverSecret(targetTile, 'Row L - Laugh with me Part 3', 'I once went to a fortune teller for him that for the next 20 years I will be poor and lonely. Jokes on him. I had no money to pay him :p', './assets/content/aisleL.jpg');
-    } else if (targetTile === 11) {
+    } if (targetTile === TILES.ROW.A) {
+      discoverSecret(GAME_CONTENTS.ROWS.A);
+    } else if (targetTile === TILES.ROW.B) {
+      discoverSecret(GAME_CONTENTS.ROWS.B);
+    } else if (targetTile === TILES.ROW.C) {
+      discoverSecret(GAME_CONTENTS.ROWS.C);
+    } else if (targetTile === TILES.ROW.D) {
+      discoverSecret(GAME_CONTENTS.ROWS.D);
+    } else if (targetTile === TILES.ROW.E) {
+      discoverSecret(GAME_CONTENTS.ROWS.E);
+    } else if (targetTile === TILES.ROW.F) {
+      discoverSecret(GAME_CONTENTS.ROWS.F);
+    } else if (targetTile === TILES.ROW.G) {
+      discoverSecret(GAME_CONTENTS.ROWS.G);
+    } else if (targetTile === TILES.ROW.H) {
+      discoverSecret(GAME_CONTENTS.ROWS.H);
+    } else if (targetTile === TILES.ROW.I) {
+      discoverSecret(GAME_CONTENTS.ROWS.I);
+    } else if (targetTile === TILES.ROW.J) {
+      discoverSecret(GAME_CONTENTS.ROWS.J);
+    } else if (targetTile === TILES.ROW.K) {
+      discoverSecret(GAME_CONTENTS.ROWS.K);
+    } else if (targetTile === TILES.ROW.L) {
+      discoverSecret(GAME_CONTENTS.ROWS.L);
+    } else if (targetTile === TILES.REGION2) {
       setupTransition(
         2,
-        [
-          [1, 1, 8, 1, 1, 1, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1, 10, 1, 1],
-          [-21, -1, -1, -1, -1, 2, -1, -1, 3],
-          [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-          [205, 205, -105, 205, 205, 205, -105, 205, 205],
-          [206, 206, -106, 206, 206, 206, -106, 206, 206],
-          [207, 207, -107, 207, 207, 207, -107, 207, 207],
-          [208, 208, -108, 208, 208, 208, -108, 208, 208],
-          [0, 0, 0, 0, 0, 0, 12, 0, 0]
-        ],
+        MAP.REGION2,
         GAME_CONTENTS.TRANSITIONING,
-        { down: { x: 384, y: 128 }, up: { x: 384, y: 448 } }
+        PLAYER.REGION2_POSITION
       );
-    } else if (targetTile === 12) {
+    } else if (targetTile === TILES.REGION3) {
       setupTransition(
         3,
-        [
-          [1, 1, 8, 1, 1, 1, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1, 11, 1, 1],
-          [-21, -1, -1, -1, -1, 2, -1, -1, 3],
-          [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-          [209, 209, -109, 209, 209, 209, -109, 209, 209],
-          [210, 210, -110, 210, 210, 210, -110, 210, 210],
-          [211, 211, -111, 211, 211, 211, -111, 211, 211],
-          [212, 212, -112, 212, 212, 212, -112, 212, 212],
-          [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ],
+        MAP.REGION3,
         GAME_CONTENTS.TRANSITIONING,
-        { down: { x: 384, y: 128 }, up: { x: 384, y: 128 } }
+        PLAYER.REGION3_POSITION
       );
-    } else if (targetTile === 10) {
+    } else if (targetTile === TILES.REGION1) {
       setupTransition(
         1,
-        [
-          [1, 1, 1, 1, 1, 1, 8, 1, 1],
-          [1, 9, 1, 1, 1, 1, 1, 1, 1],
-          [-21, -1, -1, -1, -1, 2, -1, -1, 3],
-          [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-          [201, 201, -101, 201, 201, 201, -101, 201, 201],
-          [202, 202, -102, 202, 202, 202, -102, 202, 202],
-          [203, 203, -103, 203, 203, 203, -103, 203, 203],
-          [204, 204, -104, 204, 204, 204, -104, 204, 204],
-          [0, 0, 0, 0, 0, 0, 11, 0, 0]
-        ],
+        MAP.REGION1,
         GAME_CONTENTS.TRANSITIONING,
-        { down: { x: 64, y: 128 }, up: { x: 384, y: 448 } }
+        PLAYER.REGION1_POSITION
       );
-    } else if (targetTile === 9) {
-      if (!(game.progress.secretsDiscovered.size >= 12)) {
+    } else if (targetTile === TILES.COCKPIT_DOOR) {
+      if (!(game.progress.secretsDiscovered.size <= 12)) {
         showPopup('locked', 'come back when you have discovered at least 12 secrets');
       } else {
         setupTransition(
           0,
-          [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [-21, -1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1, -1, -1, -1, -1, -1, 4],
-            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [0, 10, 0, 0, 0, 0, 0, 0, 0]
-          ],
+          MAP.COCKPIT,
           'Entering the cockpit...',
-          { down: { x: 64, y: 448 }, up: { x: 64, y: 448 } }
+          PLAYER.COCKPIT_POSITION
         );
       }
-    } if (targetTile === 4) {
+    } if (targetTile === TILES.PILOT) {
       dialogName.textContent = 'Pilot Carlson';
       dialogText.textContent = 'ah you have finally found me! Now that you know all about me I guess I really don\'t have anything else to say...';
       showDialog(dialogBox, ['Continue'], (response) => {
@@ -565,28 +458,19 @@ function setupTransition(region, map, overlayText, playerPosition) {
   setTimeout(() => {
     const gameState2 = {
       map: map,
-      gridSize: 64,
+      gridSize: PLAYER.SIZE,
       player: null,
       isMoving: false,
-      moveDuration: 0.3,
+      moveDuration: PLAYER.SPEED,
       idleTimeout: null
     };
     const direction = game.state.currentDirection;
-
-    if (direction === 'down') {
-      game.state.position = playerPosition.down || { x: 64, y: 128 };
-      generateMap(gameState2.map);
-      Object.assign(game.state, gameState2);
-      game.state.player = document.querySelector('.player');
-      game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
-    } else {
-      game.state.position = playerPosition.up || { x: 384, y: 448 };
-      generateMap(gameState2.map);
-      Object.assign(game.state, gameState2);
-      game.state.player = document.querySelector('.player');
-      game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
-      setIdleAnimation('up');
-    }
+    game.state.position = { ... playerPosition[direction] };
+    generateMap(gameState2.map);
+    Object.assign(game.state, gameState2);
+    game.state.player = document.querySelector('.player');
+    game.state.player.style.transform = `translate(${game.state.position.x}px, ${game.state.position.y}px) translateY(-260%) scale(1.5)`;
+    setIdleAnimation(direction);
 
     setTimeout(() => {
       overlay.classList.remove('fade-in');
@@ -607,19 +491,18 @@ function handleDialogInput(event) {
   }
 
   const responses = game.state.dialog.responses;
-  let selectedIndex = game.state.dialog.selectedIndex || 0; // Use the current selectedIndex or default to 0
+  let selectedIndex = game.state.dialog.selectedIndex || 0;
 
   if (event.key === 'ArrowUp') {
-    selectedIndex = (selectedIndex - 1 + responses.length) % responses.length; // Navigate up
+    selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
     updateDialogSelection(selectedIndex);
   } else if (event.key === 'ArrowDown') {
-    selectedIndex = (selectedIndex + 1) % responses.length; // Navigate down
+    selectedIndex = (selectedIndex + 1) % responses.length
     updateDialogSelection(selectedIndex);
   } else if (event.key === 'Enter') {
     selectResponse(selectedIndex);
     return;
   }
-  // Update the state with the current selected index
   game.state.dialog.selectedIndex = selectedIndex;
 
 }
@@ -674,7 +557,7 @@ function showDialog(dialogBox, responses = [], onResponse = null) {
     responseList.appendChild(listItem);
   });
 
-  dialogBox.setAttribute('tabindex', '-1'); // Make the dialog box focusable
+  dialogBox.setAttribute('tabindex', '-1');
   dialogBox.focus();
 }
 
@@ -742,48 +625,7 @@ function updateGameInfo() {
   document.getElementById('secrets-info').textContent = `Secrets Discovered: ${game.progress.secretsDiscovered.size}/${game.progress.totalSecrets}`;
 }
 
-
-function createModal({ title, imageSrc, facts }) {
-  const modal = document.createElement('div');
-  modal.id = 'fact-sheet-modal';
-  modal.className = 'hidden';
-
-  modal.innerHTML = `
-    <div class="modal-content">
-      <button class="close-button">x</button>
-      <div class="modal-header">
-        <div class="modal-pic">
-          <img src="${imageSrc}" alt="Picture" />
-        </div>
-        <h1 class="modal-title">${title}</h1>
-      </div>
-      <div class="modal-body">
-        <ul>
-          ${facts.map((fact) => `<li>${fact}</li>`).join('')}
-        </ul>
-      </div>
-    </div>
-  `;
-
-  modal.querySelector('.close-button').addEventListener('click', () => {
-    modal.classList.add('hidden');
-    modal.remove();
-  });
-
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      modal.classList.add('hidden');
-      modal.remove();
-    }
-  });
-
-  document.body.appendChild(modal);
-
-  modal.classList.remove('hidden');
-}
-
 setRandomHeight();
-
 
 const destinationsGrid = document.getElementById('destinations-grid');
 const modal = document.getElementById('destinations-modal');
@@ -824,7 +666,7 @@ destinationsGrid.addEventListener('click', (e) => {
 const menuButton = document.getElementById('menu-button');
 const menuPopup = document.getElementById('menu-popup');
 const quitButton = document.getElementById('quit-button');
-const helpButton = document.getElementById('help');
+
 menuButton.addEventListener('click', () => {
   menuPopup.classList.toggle('hidden');
 });
@@ -833,9 +675,4 @@ document.addEventListener('click', (event) => {
   if (!menuPopup.contains(event.target) && event.target !== menuButton) {
     menuPopup.classList.add('hidden');
   }
-});
-
-
-helpButton.addEventListener('click', () => {
-  createModal(TITLE_PAGE_CONTENTS.HELP_BUTTON);
 });
