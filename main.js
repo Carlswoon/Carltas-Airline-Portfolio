@@ -345,6 +345,10 @@ function handleInteraction() {
     const dialogName = document.getElementById('dialog-name');
     const dialogText = document.getElementById('dialog-text');
     if (targetTile === 2 || targetTile === 3) {
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
+        updateGameInfo();
+      }
       const lang = game.state.language || 'EN';
       const translations = GAME_CONTENTS.DIALOGUE[lang];
 
@@ -394,21 +398,18 @@ function handleInteraction() {
       setupTransition(
         2,
         MAP.REGION2,
-        'TRANSITIONING',
         PLAYER.REGION2_POSITION
       );
     } else if (targetTile === TILES.REGION3) {
       setupTransition(
         3,
         MAP.REGION3,
-        'TRANSITIONING',
         PLAYER.REGION3_POSITION
       );
     } else if (targetTile === TILES.REGION1) {
       setupTransition(
         1,
         MAP.REGION1,
-        'TRANSITIONING',
         PLAYER.REGION1_POSITION
       );
     } else if (targetTile === TILES.COCKPIT_DOOR) {
@@ -418,11 +419,14 @@ function handleInteraction() {
         setupTransition(
           0,
           MAP.COCKPIT,
-          'Entering the cockpit...',
           PLAYER.COCKPIT_POSITION
         );
       }
     } if (targetTile === TILES.PILOT) {
+      if (!game.progress.secretsDiscovered.has(targetTile)) {
+        game.progress.secretsDiscovered.add(targetTile);
+        updateGameInfo();
+      }
       const lang = game.state.language || 'EN';
       const translations = GAME_CONTENTS.DIALOGUE[lang];
 
@@ -465,7 +469,7 @@ function selectLanguage() {
   });
 }
 
-function setupTransition(region, map, overlayTextKey, playerPosition) {
+function setupTransition(region, map, playerPosition) {
   const language = game.state.language || 'EN';
   const overlayText = GAME_CONTENTS.TRANSITIONING[language];
 
@@ -521,7 +525,7 @@ function handleDialogInput(event) {
     selectedIndex = (selectedIndex - 1 + responses.length) % responses.length;
     updateDialogSelection(selectedIndex);
   } else if (event.key === 'ArrowDown') {
-    selectedIndex = (selectedIndex + 1) % responses.length
+    selectedIndex = (selectedIndex + 1) % responses.length;
     updateDialogSelection(selectedIndex);
   } else if (event.key === 'Enter') {
     selectResponse(selectedIndex);
@@ -671,7 +675,15 @@ destinationsGrid.addEventListener('click', (e) => {
     const countryDetails = TITLE_PAGE_CONTENTS.COUNTRY_DETAILS;
 
     if (country === 'DANGER') {
-      showPopup('lol', 'what');
+      const downloadAsset = (fileName, fileUrl) => {
+        const a = document.createElement('a');
+        a.href = fileUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      downloadAsset('dangerFlag', 'assets/dangerFlag.pdf');
     } else {
       const details = countryDetails[country];
       if (details) {

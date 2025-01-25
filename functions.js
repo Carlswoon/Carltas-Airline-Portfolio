@@ -29,7 +29,7 @@ export function showPopup(title, message, imagePath = null) {
     img.alt = 'Image';
     popupImage.appendChild(img);
   } else {
-    popupImage.textContent = 'PIC'; // Default placeholder if no image provided
+    popupImage.classList.remove('popup-image');
   }
 
   popupContent.appendChild(popupImage);

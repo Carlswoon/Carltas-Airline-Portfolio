@@ -13,36 +13,51 @@ export const TITLE_PAGE_CONTENTS = {
   COUNTRY_DETAILS: {
     Australia: {
       title: 'Australia',
-      text: 'I live in Sydney, and I study Computer Science at UNSW.',
+      text: 'I was born in Sydney and appreciate the diverse society we have ' +
+            'compared to other countries. I in particular love freddos and ' +
+            'timtams!!!!! (￣﹃￣)<br>' +
+            'hint: PILOT',
       image: './assets/flags/Australia.png'
     },
     China: {
       title: 'China',
-      text: 'I\'m learning Mandarin and love Chinese cuisine like dumplings and hotpot.',
+      text: 'I\'m of Chinese descent which pushes me to be more touched with ' +
+            'my culture which is why I have a strong determination to learn ' +
+            'Chinese. I\'ve only visited Xiamen and am looking to visit other' +
+            ' other places like ChongQing and Shanghai!<br>' +
+            'hint: CARLSON',
       image: './assets/flags/China.png'
     },
     America: {
       title: 'America',
-      text: 'I\'ve always admired Silicon Valley and the tech scene in the US!',
+      text: 'I really would like to visit this country and really experience ' +
+            'the \'American Dream\'. I am particularly inspired by innovative' +
+            ' companies such as Tesla and Apple.<br>' +
+            'hint: IS INSIDE',
       image: './assets/flags/America.png'
     },
     Korea: {
       title: 'Korea',
-      text: 'Kdrama!',
+      text: 'KDRAMA, KOREAN FOOD, KOREAN SKINCARE, KPOP and K-IDOLS. They ' +
+            'have it all OMG. I love this country\'s culture so much!!<br>' +
+            'hint: THE',
       image: './assets/flags/Korea.png'
     },
     Philippines: {
       title: 'Philippines',
-      text: 'I\'m filo lol',
+      text: 'if you guessed it by my last name congrats. Yes, I am filopino ' +
+            'but am only a bit. FOOD IS SO FRIGGIN GOOD HERE. AHHHH.<br>' +
+            'hint: COCKPIT',
       image: './assets/flags/Philippines.png'
     }
   },
-  INTRO_MESSAGE: 'Welcome aboard! This is Carlson\'s "about me" portfolio. ' +
-                 'Carlson has suddenly disappeared and we need to find him ' +
-                 'now! We need your help! After this interaction you will be ' +
-                 'taken to the title page in which you will find 3 buttons: ' +
-                 'start, Where was Carlson Last Seen and ?. Do you have any ' +
-                 'questions?',
+  INTRO_MESSAGE: 'Welcome aboard to Carlson\'s about me porfolio fellow ' +
+                 'passenger. It appears that Carlson has gone missing in this' +
+                 ' plane and we cannot find him. Your task is to find him and' +
+                 ' give him a good lecture to not go MIA next time! There\'ll' +
+                 ' be some secrets for you to uncover during your quest in ' +
+                 'finding Carlson which are also secretly hidden in this ' +
+                 'plane. Do you have any questions for me?',
   INTRO_MESSAGE_OPTION1: [
     'What is the start button?',
     'What is the "Where was Carlson last seen" button?',
@@ -64,17 +79,21 @@ export const TITLE_PAGE_CONTENTS = {
     'What is the "Where was Carlson last seen" button?',
     'Continue'
   ],
-  INTRO_MESSAGE1: 'The start button will commence the game and you will be ' +
-                  'required to find Carlson. There\'ll be secrets to uncover ' +
-                  'about Carlson which will help you find his location!',
+  INTRO_MESSAGE1: 'The start button as the name suggests will commence your ' +
+                  'quest in finding this mischievious, up-to-no-good, ' +
+                  'brain-rot Carlson. Click this whenever you feel ready to ' +
+                  'give this Carlson a well-deserved earful when you find him!',
   INTRO_MESSAGE2: 'The "Where was Carlson last seen" button will provide ' +
-                  'hints about Carlson\'s personality which may help you find' +
-                  ' his location! There is also a danger button which is for' +
-                  'those who are unwilling to play the game and just want ' +
-                  'Carlson\'s about me portfolio.',
-  INTRO_MESSAGE3: 'The "?" button provides help and guidance about the game, ' +
-                  'offering tips and explaining the rules to enhance your ' +
-                  'experience.',
+                  'you valuable information about Carlson\'s personality and ' +
+                  'contains hints on his whereabouts if you are up to for the' +
+                  ' challenge to decode the hidden message. There is also a ' +
+                  'danger button which is for those who are unwilling to play' +
+                  ' the game and just want Carlson\'s about me portfolio ' +
+                  'in one second. OR does it do something else? How DANGEROUS' +
+                  ' is this button really?',
+  INTRO_MESSAGE3: 'You clicked this button to navigate here! Hopefully, you ' +
+                  'now know what this button does now. If you do not well ' +
+                  'here is an explanation: "explanation"',
   INTRO_MESSAGE4: 'Good luck with the game! Let the adventure begin!'
 };
 
@@ -365,10 +384,10 @@ export const GAME_CONTENTS = {
         PH: 'Row K - Panahon ng Biro Bahagi 2'
       },
       content: {
-        EN: 'Yo computer science teaching mama so fat, she can flatten a binary tree in O(1). (this is not targeted at your mum)',
-        CN: '你的计算机科学老师妈妈太胖了，她可以在O(1)时间内扁平化二叉树。（这不是针对你的妈妈）',
-        KR: '컴퓨터 과학을 가르치는 엄마가 너무 뚱뚱해서 이진 트리를 O(1) 시간에 평평하게 만들 수 있어요. (이건 당신의 엄마를 겨냥한 게 아닙니다)',
-        PH: 'Yo ang nagtuturo ng computer science mama mo sobrang taba, kaya niyang i-flatten ang binary tree sa O(1). (hindi ito para sa nanay mo)'
+        EN: 'Ma brain so massive, it can flatten a binary tree in O(1).',
+        CN: '我的大脑太强了，能在 O(1) 的时间内扁平化一棵二叉树。',
+        KR: '내 뇌가 너무 커서 O(1) 시간 안에 이진 트리를 평탄화할 수 있어!',
+        PH: 'Ang utak ko sobrang laki, kaya kong i-flatten ang binary tree sa O(1)!'
       },
       image: './assets/content/aisleK.png'
     },
