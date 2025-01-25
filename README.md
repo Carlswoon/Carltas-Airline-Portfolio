@@ -18,12 +18,3 @@ Welcome to my interactive portfolio project! This website is an interactive game
 - **JavaScript**: Handles the interactive features, including game logic, animations, and dynamic content.
 - **Pixel Art**: Custom graphics used to create a visually engaging experience.
 
----
-
-## **How to Run This Project Locally**
-To run this project on your own machine, follow these steps:
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/your-username/carlsons-portfolio.git
-
