@@ -1,20 +1,51 @@
-# Carlson's "Around The World" Portfolio
+# Carltas Airline Portfolio
 
-Welcome to my interactive portfolio project! This website is an interactive game-based experience that allows you to explore details about me, Carlson, through a fun, **"Around The World"** theme. As you journey through different sections, you will discover various facts about me, my background, interests, and aspirations.
+An interactive, game-based personal portfolio built with HTML, CSS, and JavaScript.
 
----
+Instead of presenting portfolio information through a traditional static layout, Carltas Airline allows users to explore different areas, interact with objects, and discover information through a travel-themed experience.
 
-## **Features**
-- **Interactive "Around The World" Exploration**: Discover information about me through a gamified experience with different global locations and personal insights.
-- **Pixel Art Style**: The design includes **pixel art** characters and environments inspired by the concept of traveling around the world.
-- **Secret Discovery**: As you explore, you’ll unlock **"secrets"** that reveal more personal facts.
-- **Responsive Design**: The site is designed to work smoothly across both **desktop** and **mobile devices.
+## Live Demo
 
----
+https://carltas-airline-portfolio.vercel.app
 
-## **Tech Stack**
-- **HTML**: For the structure of the website.
-- **CSS**: Used for styling the website, including animations and responsive layouts.
-- **JavaScript**: Handles the interactive features, including game logic, animations, and dynamic content.
-- **Pixel Art**: Custom graphics used to create a visually engaging experience.
+## Features
 
+- Interactive player movement and exploration
+- Object-based interactions that reveal portfolio content
+- Unlockable areas and hidden discoveries
+- Travel-inspired pixel art interface
+- Dynamic UI elements and animations
+- Responsive behaviour for desktop and mobile devices
+
+## Tech Stack
+
+- HTML
+- CSS
+- JavaScript
+- Vercel
+
+## How It Works
+
+The project uses JavaScript to manage player interaction, movement, game state, and dynamic UI behaviour.
+
+The application logic is separated across multiple files, including:
+
+- `main.js` — primary application and interaction logic
+- `functions.js` — reusable helper functions
+- `constants.js` — configuration and reusable values
+- `mobileFunction.js` — mobile-specific behaviour
+- `style.css` — styling, layout, and animations
+
+## Project Goals
+
+The main goal of this project was to create a portfolio that feels more like an interactive experience than a traditional website.
+
+I wanted users to actively explore the site rather than simply scroll through sections, while still presenting information about my background, interests, and projects.
+
+## Running Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Carlswoon/Carltas-Airline-Portfolio.git
+cd Carltas-Airline-Portfolio
